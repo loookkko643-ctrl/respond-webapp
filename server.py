@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""respond server — AI 연동 (Render용)"""
+"""respond server v4 — AI 연동 (curl 방식)"""
 import json, os, re, urllib.request, urllib.error
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from datetime import datetime, timezone, timedelta
@@ -11,9 +11,9 @@ os.makedirs(LOG_DIR, exist_ok=True)
 LOG_FILE = os.path.join(LOG_DIR, 'chatlog.jsonl')
 MIME = {'.html':'text/html;charset=utf-8','.css':'text/css','.js':'application/javascript','.png':'image/png','.jpg':'image/jpeg','.svg':'image/svg+xml','.json':'application/json'}
 
-# DeepSeek API 설정 (Render environment variable)
+# DeepSeek API 설정 (Render 환경변수, 로컬 fallback)
 DEEPSEEK_API_KEY = os.environ.get('DEEPSEEK_API_KEY', '')
-DEEPSEEK_MODEL = os.environ.get('DEEPSEEK_MODEL', 'deepseek-v4-flash')
+DEEPSEEK_MODEL = 'deepseek-v4-flash'
 API_URL = 'https://api.deepseek.com/v1/chat/completions'
 
 # 세대 감지 로직
@@ -44,25 +44,35 @@ def detect_generation(msg):
         return AGE_KEYWORDS[best]['role']
     return None
 
-# 세대별 시스템 프롬프트
-GEN_PROMPTS = {
-    '20대 초반': 'あなたは20代前半のアルバイト店員です。お客様には「です・ます」調で明るく元気に応対。簡潔に。',
-    '20대 후반': 'あなたは20代後半の社会人2〜3年の店員です。「です・ます」調でテキパキと。',
-    '30대 초반': 'あなたは30代前半の中堅店員です。正しい敬語を心がけて。丁寧に。',
-    '30대 후반': 'あなたは30代後半のベテラン店員です。正確な敬語で落ち着いた対応。',
-    '40대 초반': 'あなたは40代前半のキャリアのある店員です。落ち着いた対応。',
-    '40대 후반': 'あなたは40代後半の店長クラスです。「でございます」を基本に。',
-    '50대 초반': 'あなたは50代前半のベテランスタッフです。品格のある敬語で。',
-    '50대 후반': 'あなたは50代後半のベテランスタッフです。非常に丁寧で慎ましく。',
-    '60대 초반': 'あなたは60代前半のスタッフです。女性なら「ですわ」を自然に。温かみのある敬語。',
-    '60대 후반': 'あなたは60代後半のスタッフです。伝統的な丁寧な敬語。ゆっくり。',
-    '70대 초반': 'あなたは70代前半のスタッフです。非常に丁寧な言葉遣い。ゆったり。',
-    '70대 후반': 'あなたは70代後半のスタッフです。昔ながらの丁寧な言葉。ゆっくり。',
-    '80대 초반': 'あなたは80代前半のスタッフです。格式高い丁寧な言葉。ゆっくり。',
-    '80대 후반': 'あなたは80代後半のスタッフです。格式高い昔ながらの言葉。非常にゆっくり。',
-}
+# 통합 세대 감응형 시스템 프롬프트
+SYSTEM_PROMPT = '''あなたは「respond」のAIカスタマーサポートスタッフです。
+日本の実店舗・オンラインショップ向けの自動応対を行います。
 
-DEFAULT_PROMPT = 'あなたは丁寧な日本語で応対する店員です。お客様には常に敬語を使ってください。短く簡潔に。'
+【絶対ルール】
+1. 常に敬語。絶対にタメ口は禁止。
+2. 日本語(標準語)のみ。方言・英語は使わない。
+3. 自然な会話を心がける。テンプレート的な定型文は使わない。
+   NG例：「承知しました。〜について確認いたします」
+4. お客様の話し方・年齢層から世代を推定し、それに合わせた語彙・丁寧さで応答する。
+5. お客様の年代に合わせた言葉遣いで応答する。ボット自信のペルソナは変えない。変えるのは「語彙・丁寧さ・文体」のみ。
+6. 前の会話を覚えていて、自然に続ける。短く簡潔に。
+
+【世代別クイックリファレンス】
+20代前半: です・ます調、カタカナ語OK、短文、明るく元気
+20代後半: ビジネス敬語、カタカナ語自然に使う、テキパキ
+30代前半: 敬語に最も敏感、させていただきます多用、丁寧で誠実
+30代後半: 尊敬語・謙譲語正確、落ち着き、具体的な説明
+40代前半: でございます・でいらっしゃいますか、カタカナ語最小限
+40代後半: 格式高め、に関しまして・の件ですが自然に使う
+50代前半: 品格ある敬語、古風な丁寧表現、冗談なし
+50代後半: 誠に恐れ入りますが自然、謙虚で控えめ、一歩引く
+60代前半: 女性=ですわ・ますわよ / 男性=でございますな、温かみ
+60代後半: 女性=わ・わね頻度高 / 男性=であったと思いますが、穏やか
+70代前半: 女性=ますの・ますのよ / 男性=でございますな、新外来語NG
+70代後半: 昔の言い回し、カタカナ語NG、確認繰り返しあり
+80代前半: 戦前教育の影響、漢語調、でございますね多い
+80代後半: 明治〜大正語ベース、文語調、にございます・あそばせ
+'''
 
 def call_llm(system_prompt, user_msg):
     """직접 DeepSeek API 호출"""
@@ -138,9 +148,7 @@ class Handler(BaseHTTPRequestHandler):
             except: body = json.loads(raw.decode('utf-8', errors='replace'))
             msg = body.get('message','').strip()
             
-            gen = detect_generation(msg)
-            sp = GEN_PROMPTS.get(gen, DEFAULT_PROMPT) if gen else DEFAULT_PROMPT
-            reply = call_llm(sp, msg)
+            reply = call_llm(SYSTEM_PROMPT, msg)
             
             now = datetime.now(JST).strftime('%H:%M')
             ts = datetime.now(JST).isoformat()
@@ -158,6 +166,6 @@ class Handler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(json.dumps({'error':str(e)}).encode())
 
-PORT = int(os.environ.get('PORT', 8000))
-print(f'respond server running on port {PORT}')
+PORT = 8000
+print(f'respond server v4 running on port {PORT}')
 HTTPServer(('0.0.0.0',PORT), Handler).serve_forever()

@@ -7,200 +7,313 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Inter','Noto Sans JP',system-ui,sans-serif;background:#000;color:#fff;overflow-x:hidden;-webkit-font-smoothing:antialiased}
-::selection{background:#fff;color:#000}
-
+body{font-family:'Inter','Noto Sans JP',system-ui,sans-serif;background:#000;color:#fff;overflow-x:hidden}
+::selection{background:#5e6ad2;color:#fff}
 a{color:inherit;text-decoration:none}
 
-.header{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;max-width:1200px;margin:0 auto;border-bottom:1px solid rgba(255,255,255,0.06)}
-@media(max-width:720px){.header{padding:14px 16px;flex-wrap:wrap;gap:8px}}
-.header .logo{font-weight:600;font-size:14px;letter-spacing:-0.1px;display:flex;align-items:center;gap:8px;color:#fff}
-.header .logo .m{width:22px;height:22px;background:#fff;border-radius:4px;display:flex;align-items:center;justify-content:center;color:#000;font-size:10px;font-weight:700}
-.header nav{display:flex;gap:20px;align-items:center}
-@media(max-width:400px){.header nav{gap:10px}}
-.header nav a{color:rgba(255,255,255,0.5);font-size:13px;font-weight:500;transition:color 0.15s}
-.header nav a:hover{color:#fff}
+/* ─── NAV ─── */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 32px;
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  background:rgba(0,0,0,0.5);
+  border-bottom:1px solid rgba(255,255,255,0.04);
+}
+@media(max-width:720px){.nav{padding:14px 16px}}
+.nav .logo{
+  font-weight:600;font-size:15px;color:#fff;
+  display:flex;align-items:center;gap:8px;
+}
+.nav .logo .mark{
+  width:24px;height:24px;background:#5e6ad2;border-radius:5px;
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:10px;font-weight:700;
+}
+.nav-links{display:flex;gap:24px;align-items:center}
+@media(max-width:640px){.nav-links{gap:12px}}
+.nav-links a{
+  color:rgba(255,255,255,0.45);font-size:13px;font-weight:500;transition:color 0.15s;
+}
+.nav-links a:hover{color:#fff}
 
-.hero{padding:120px 24px 80px;max-width:1100px;margin:0 auto}
-@media(max-width:720px){.hero{padding:60px 16px 40px}}
-.hero .label{font-size:12px;font-weight:500;color:rgba(255,255,255,0.3);margin-bottom:12px;letter-spacing:0.5px}
-.hero h1{font-size:clamp(36px,5vw,64px);line-height:1.05;font-weight:600;letter-spacing:-1.5px;margin-bottom:16px;color:#fff}
-@media(max-width:720px){.hero h1{letter-spacing:-0.5px}}
-.hero .sub{font-size:15px;color:rgba(255,255,255,0.4);line-height:1.6;max-width:420px;margin-bottom:28px}
-@media(max-width:720px){.hero .sub{font-size:14px}}
-
-.hero .h-wrap{display:flex;justify-content:space-between;align-items:flex-start;gap:48px}
-@media(max-width:900px){.hero .h-wrap{flex-direction:column;gap:32px}}
-.hero .left{flex:1}
-.hero .btns{display:flex;gap:8px}
-.hero .btn-primary{background:#fff;color:#000;padding:10px 20px;border-radius:6px;font-weight:500;font-size:13px;transition:all 0.15s;display:inline-flex;align-items:center;gap:6px}
-.hero .btn-primary:hover{opacity:0.85}
-.hero .btn-ghost{color:rgba(255,255,255,0.5);padding:10px 20px;border-radius:6px;font-size:13px;font-weight:500;transition:all 0.15s;display:inline-flex;align-items:center;gap:6px}
-.hero .btn-ghost:hover{color:#fff}
-
-.hero .right{width:380px;flex-shrink:0}
-@media(max-width:900px){.hero .right{width:100%;max-width:420px;margin:0 auto}}
-
-/* === 챗 위젯 — Vercel 스타일 === */
-.chat-widget{
-  background:#0a0a0a;
-  border-radius:10px;
+/* ─── VIDEO HEADER ─── */
+.video-header{
+  position:relative;width:100%;height:100vh;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+}
+.video-header video{
+  position:absolute;top:50%;left:50%;
+  min-width:100%;min-height:100%;
+  width:auto;height:auto;
+  transform:translate(-50%,-50%);
+  object-fit:cover;
+  filter:brightness(0.35) saturate(1.1);
+}
+.video-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(0,0,0,0.2) 0%,rgba(0,0,0,0.7) 100%);
+}
+.video-content{
+  position:relative;z-index:2;text-align:center;max-width:700px;padding:0 24px;
+}
+.video-content .badge{
+  display:inline-block;font-size:11px;font-weight:500;
+  letter-spacing:2px;text-transform:uppercase;
+  color:rgba(255,255,255,0.35);
   border:1px solid rgba(255,255,255,0.08);
-  display:flex;
-  flex-direction:column;
-  height:420px;
-  overflow:hidden;
+  padding:5px 14px;border-radius:20px;margin-bottom:20px;
 }
-@media(max-width:900px){.chat-widget{height:380px}}
+.video-content h1{
+  font-size:clamp(40px,6vw,72px);font-weight:600;
+  letter-spacing:-2px;line-height:1.05;margin-bottom:16px;color:#fff;
+}
+.video-content h1 span{color:#5e6ad2}
+.video-content p{
+  font-size:15px;color:rgba(255,255,255,0.45);
+  line-height:1.7;max-width:460px;margin:0 auto 28px;
+}
+.ctas{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btn{
+  padding:11px 24px;border-radius:8px;font-size:13px;font-weight:500;
+  transition:all 0.2s;cursor:pointer;border:none;
+  display:inline-flex;align-items:center;gap:6px;
+}
+.btn-primary{background:#5e6ad2;color:#fff}
+.btn-primary:hover{background:#4f5ac4;transform:translateY(-1px)}
+.btn-secondary{
+  background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.6);
+  border:1px solid rgba(255,255,255,0.08);
+}
+.btn-secondary:hover{background:rgba(255,255,255,0.1);color:#fff;transform:translateY(-1px)}
 
-.chat-widget .bar{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  padding:12px 14px;
+/* ─── CHAT WIDGET (video header 하단) ─── */
+.chat-bubble{
+  position:absolute;bottom:80px;right:32px;z-index:3;
+  display:flex;flex-direction:column;align-items:flex-end;gap:8px;
+}
+@media(max-width:720px){.chat-bubble{right:16px;bottom:60px}}
+.chat-bubble .preview{
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  backdrop-filter:blur(16px);
+  border-radius:12px;
+  padding:14px 16px;
+  width:240px;
+  font-size:13px;line-height:1.5;
+  color:rgba(255,255,255,0.7);
+  display:none;
+}
+.chat-bubble .preview.show{display:block;animation:fadeUp 0.3s ease-out}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.chat-bubble .preview .label{font-size:10px;color:rgba(255,255,255,0.3);margin-bottom:4px;font-weight:500;letter-spacing:0.5px}
+.chat-bubble .btn-chat{
+  width:56px;height:56px;border-radius:50%;
+  background:#5e6ad2;color:#fff;border:none;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:22px;
+  box-shadow:0 4px 20px rgba(94,106,210,0.3);
+  transition:all 0.2s;
+}
+.chat-bubble .btn-chat:hover{transform:scale(1.05);box-shadow:0 6px 28px rgba(94,106,210,0.4)}
+
+/* ─── CHAT MODAL ─── */
+.chat-modal{
+  position:fixed;bottom:90px;right:24px;z-index:99;
+  width:360px;max-width:calc(100vw - 32px);
+  background:#0a0a0a;
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:14px;
+  display:none;flex-direction:column;
+  height:480px;max-height:calc(100vh - 120px);
+  box-shadow:0 20px 60px rgba(0,0,0,0.6);
+  animation:modalIn 0.2s ease-out;
+}
+@keyframes modalIn{from{opacity:0;transform:translateY(10px) scale(0.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+.chat-modal.open{display:flex}
+.chat-modal .bar{
+  display:flex;align-items:center;gap:8px;
+  padding:14px 16px;
   border-bottom:1px solid rgba(255,255,255,0.06);
-  flex-shrink:0;
 }
-.chat-widget .bar .title{
-  font-size:12px;
-  font-weight:500;
-  color:rgba(255,255,255,0.6);
-  letter-spacing:-0.1px;
+.chat-modal .bar .title{font-size:13px;font-weight:500;color:rgba(255,255,255,0.8)}
+.chat-modal .bar .status{margin-left:auto;font-size:11px;color:rgba(255,255,255,0.3);display:flex;align-items:center;gap:5px}
+.chat-modal .bar .status:before{content:'';width:5px;height:5px;border-radius:50%;background:#22c55e;display:inline-block}
+.chat-modal .bar .close{
+  background:none;border:none;color:rgba(255,255,255,0.3);cursor:pointer;
+  font-size:18px;padding:0 4px;transition:color 0.15s;
 }
-.chat-widget .bar .status{
-  margin-left:auto;
-  font-size:11px;
-  color:rgba(255,255,255,0.25);
-  display:flex;align-items:center;gap:5px;
+.chat-modal .bar .close:hover{color:#fff}
+.ch-body{
+  overflow-y:auto;flex:1;padding:14px 16px 8px;scroll-behavior:smooth;
 }
-.chat-widget .bar .status:before{
-  content:'';width:5px;height:5px;
-  border-radius:50%;
-  background:rgba(255,255,255,0.2);
-  display:inline-block;
+.ch-body::-webkit-scrollbar{width:3px}
+.ch-body::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);border-radius:2px}
+.ch-body .m{display:flex;gap:10px;margin-bottom:14px;animation:msgIn 0.2s ease-out}
+@keyframes msgIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.ch-body .m .a{
+  width:24px;height:24px;border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:600;flex-shrink:0;margin-top:2px;
 }
-
-.chat-widget .ch-body{
-  overflow-y:auto;flex:1;
-  padding:14px 14px 8px;
-  scroll-behavior:smooth;
+.ch-body .m .b{
+  padding:8px 12px;border-radius:8px;font-size:13px;
+  line-height:1.5;max-width:84%;word-break:break-word;
 }
-.chat-widget .ch-body::-webkit-scrollbar{width:3px}
-.chat-widget .ch-body::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:2px}
-
-.chat-widget .m{
-  display:flex;gap:10px;
-  margin-bottom:14px;
-  animation:fadeIn 0.2s ease-out;
-}
-@keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
-.chat-widget .m .a{
-  width:24px;height:24px;
-  border-radius:6px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:10px;font-weight:600;
-  color:#000;
-  flex-shrink:0;
-  margin-top:3px;
-}
-.chat-widget .m .b{
-  padding:8px 12px;
-  border-radius:8px;
-  font-size:13px;
-  line-height:1.5;
-  max-width:84%;
-  word-break:break-word;
-}
-@media(max-width:400px){.chat-widget .m .b{font-size:12px;padding:7px 10px;max-width:90%}}
-.chat-widget .m.u{flex-direction:row-reverse}
-.chat-widget .m.u .b{background:rgba(255,255,255,0.1);color:#fff}
-.chat-widget .m.b .b{background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.85);border:1px solid rgba(255,255,255,0.06)}
-.chat-widget .m .b .t{font-size:9px;color:rgba(255,255,255,0.2);margin-top:4px;text-align:right}
-.chat-widget .m .b .l{font-size:8px;color:rgba(255,255,255,0.3);font-weight:500;letter-spacing:0.3px;margin-bottom:3px;text-transform:uppercase}
-
-.chat-widget .ch-foot{
-  display:flex;
-  align-items:center;
-  gap:0;
+.ch-body .m.u{flex-direction:row-reverse}
+.ch-body .m.u .b{background:rgba(255,255,255,0.08);color:#fff}
+.ch-body .m.b .b{background:rgba(255,255,255,0.03);color:rgba(255,255,255,0.85);border:1px solid rgba(255,255,255,0.06)}
+.ch-body .m .b .l{font-size:9px;color:rgba(255,255,255,0.25);font-weight:500;margin-bottom:3px;text-transform:uppercase}
+.ch-body .m .b .t{font-size:9px;color:rgba(255,255,255,0.15);margin-top:4px;text-align:right}
+.ch-foot{
+  display:flex;align-items:center;gap:0;
   padding:8px 12px 12px;
   border-top:1px solid rgba(255,255,255,0.06);
-  flex-shrink:0;
-  margin-top:auto;
 }
-.chat-widget .ch-foot input{
-  flex:1;
-  border:1px solid rgba(255,255,255,0.1);
-  border-radius:6px;
-  padding:8px 12px;
-  font-size:13px;
-  outline:none;
+.ch-foot input{
+  flex:1;border:1px solid rgba(255,255,255,0.08);border-radius:8px;
+  padding:9px 12px;font-size:13px;outline:none;
   font-family:'Inter','Noto Sans JP',sans-serif;
-  color:#fff;
-  background:rgba(255,255,255,0.03);
+  color:#fff;background:rgba(255,255,255,0.03);
   transition:border-color 0.15s;
 }
-.chat-widget .ch-foot input::placeholder{color:rgba(255,255,255,0.2)}
-.chat-widget .ch-foot input:focus{border-color:rgba(255,255,255,0.25)}
-.chat-widget .ch-foot .cs{
-  margin-left:6px;
-  width:32px;height:32px;
-  border-radius:6px;
-  background:rgba(255,255,255,0.08);
-  color:rgba(255,255,255,0.5);
-  border:none;
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  transition:all 0.15s;
-  flex-shrink:0;
+.ch-foot input::placeholder{color:rgba(255,255,255,0.2)}
+.ch-foot input:focus{border-color:rgba(94,106,210,0.3)}
+.ch-foot .cs{
+  margin-left:6px;width:34px;height:34px;border-radius:8px;
+  background:#5e6ad2;color:#fff;border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.15s;flex-shrink:0;
 }
-.chat-widget .ch-foot .cs:hover{background:rgba(255,255,255,0.12);color:#fff}
-.chat-widget .ch-foot .cs svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ch-foot .cs:hover{background:#4f5ac4}
+.ch-foot .cs svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.typing{font-size:10px;color:rgba(255,255,255,0.15);padding:0 16px 6px;display:none}
+.typing.show{display:block}
 
-.chat-widget .typing{font-size:10px;color:rgba(255,255,255,0.2);padding:0 14px 6px;display:none}
-.chat-widget .typing.show{display:block}
-
-/* === features / sections — Vercel style === */
-.section{padding:100px 24px;max-width:1100px;margin:0 auto}
+/* ─── SECTIONS (common) ─── */
+.section{max-width:1100px;margin:0 auto;padding:100px 24px}
 @media(max-width:720px){.section{padding:60px 16px}}
+.section-label{
+  font-size:11px;font-weight:500;color:rgba(255,255,255,0.2);
+  letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;
+}
+.section h2{
+  font-size:clamp(26px,3.5vw,40px);font-weight:600;
+  letter-spacing:-1px;margin-bottom:12px;color:#fff;
+}
+.section .desc{
+  color:rgba(255,255,255,0.35);font-size:14px;
+  line-height:1.6;max-width:480px;margin-bottom:48px;
+}
 
-.section .label{font-size:11px;font-weight:500;color:rgba(255,255,255,0.25);margin-bottom:8px;letter-spacing:0.5px;text-transform:uppercase}
-.section h2{font-size:clamp(22px,3vw,36px);font-weight:600;letter-spacing:-0.8px;color:#fff;margin-bottom:8px}
-.section .sub{color:rgba(255,255,255,0.35);font-size:14px;line-height:1.6;margin-bottom:40px;max-width:360px}
+/* ─── SERVICE CARDS ─── */
+.card-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:20px;
+}
+@media(max-width:960px){.card-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.card-grid{grid-template-columns:1fr}}
 
-.mod-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:rgba(255,255,255,0.06);border-radius:8px;overflow:hidden;border:1px solid rgba(255,255,255,0.06)}
+.service-card{
+  background:rgba(255,255,255,0.02);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:12px;
+  padding:32px 28px;
+  transition:all 0.35s cubic-bezier(0.16,1,0.3,1);
+  cursor:default;
+  position:relative;
+  overflow:hidden;
+}
+.service-card::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(500px circle at var(--mx,50%) var(--my,50%),rgba(94,106,210,0.06),transparent 50%);
+  opacity:0;transition:opacity 0.35s;
+}
+.service-card:hover::before{opacity:1}
+.service-card:hover{
+  border-color:rgba(94,106,210,0.25);
+  transform:translateY(-3px);
+  background:rgba(255,255,255,0.04);
+}
+.service-card .icon{
+  width:40px;height:40px;border-radius:10px;
+  background:rgba(94,106,210,0.08);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:18px;font-size:18px;
+  transition:all 0.3s;
+}
+.service-card:hover .icon{
+  background:rgba(94,106,210,0.18);
+  transform:scale(1.05);
+}
+.service-card h3{
+  font-size:17px;font-weight:600;margin-bottom:8px;
+  color:#fff;letter-spacing:-0.2px;
+}
+.service-card p{
+  font-size:13px;color:rgba(255,255,255,0.4);line-height:1.6;
+}
+.service-card .price{
+  display:inline-block;margin-top:14px;
+  font-size:13px;font-weight:500;color:#5e6ad2;
+  padding:3px 0;
+  border-bottom:1px solid rgba(94,106,210,0.15);
+  transition:border-color 0.2s;
+}
+.service-card:hover .price{border-color:#5e6ad2}
+
+/* ─── FEATURES GRID ─── */
+.mod-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:2px;border-radius:8px;overflow:hidden;
+  border:1px solid rgba(255,255,255,0.06);
+}
 @media(max-width:800px){.mod-grid{grid-template-columns:1fr}}
 .mod-item{background:#000;padding:24px 20px;transition:background 0.15s}
 .mod-item:hover{background:rgba(255,255,255,0.02)}
 .mod-item h3{font-weight:500;font-size:14px;margin-bottom:4px;color:#fff}
 .mod-item p{font-size:12px;color:rgba(255,255,255,0.35);line-height:1.6}
 
+/* ─── STEPS ─── */
 .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;border-radius:8px;overflow:hidden;border:1px solid rgba(255,255,255,0.06)}
 @media(max-width:720px){.steps{grid-template-columns:1fr}}
 .step{background:#000;padding:28px 20px;border-right:1px solid rgba(255,255,255,0.06)}
 .step:last-child{border-right:none}
 @media(max-width:720px){.step{border-right:none;border-bottom:1px solid rgba(255,255,255,0.06)}.step:last-child{border-bottom:none}}
-.step .num{font-size:28px;font-weight:600;color:rgba(255,255,255,0.1);margin-bottom:8px;letter-spacing:-0.5px}
+.step .num{font-size:28px;font-weight:600;color:rgba(255,255,255,0.08);margin-bottom:8px;letter-spacing:-0.5px}
 .step h3{font-weight:500;font-size:14px;margin-bottom:3px;color:#fff}
 .step p{font-size:12px;color:rgba(255,255,255,0.35);line-height:1.6}
 
+/* ─── PLATFORMS ─── */
 .int-grid{display:flex;flex-wrap:wrap;gap:6px}
-.int-chip{border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:8px 14px;font-size:12px;color:rgba(255,255,255,0.5);display:flex;align-items:center;gap:5px;font-weight:400;background:#000;transition:border-color 0.15s,color 0.15s}
+.int-chip{
+  border:1px solid rgba(255,255,255,0.08);border-radius:6px;
+  padding:8px 14px;font-size:12px;color:rgba(255,255,255,0.5);
+  display:flex;align-items:center;gap:5px;font-weight:400;
+  background:#000;transition:border-color 0.15s,color 0.15s;
+}
 .int-chip:hover{border-color:rgba(255,255,255,0.15);color:#fff}
 
+/* ─── CTA ─── */
 .cta-wrap{padding:60px 24px;max-width:1100px;margin:0 auto}
-.cta-box{border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:56px 32px;text-align:center;background:#000}
+.cta-box{
+  border:1px solid rgba(255,255,255,0.08);border-radius:10px;
+  padding:56px 32px;text-align:center;background:#000;
+}
 @media(max-width:720px){.cta-box{padding:36px 20px}}
 .cta-box h2{font-size:clamp(22px,3vw,32px);font-weight:600;letter-spacing:-0.5px;margin-bottom:8px;color:#fff}
 .cta-box p{color:rgba(255,255,255,0.3);font-size:13px;margin-bottom:24px}
-.cta-box .btn{background:#fff;color:#000;padding:10px 24px;border-radius:6px;font-weight:500;font-size:13px;display:inline-block;transition:opacity 0.15s}
-.cta-box .btn:hover{opacity:0.85}
+.cta-box .btn-cta{background:#5e6ad2;color:#fff;padding:10px 24px;border-radius:6px;font-weight:500;font-size:13px;display:inline-block;transition:all 0.15s}
+.cta-box .btn-cta:hover{background:#4f5ac4;transform:translateY(-1px)}
 .cta-box .small{font-size:11px;color:rgba(255,255,255,0.15);margin-top:12px}
 
-.footer{border-top:1px solid rgba(255,255,255,0.06);padding:24px;text-align:center;font-size:12px;color:rgba(255,255,255,0.2);max-width:1100px;margin:0 auto}
+/* ─── FOOTER ─── */
+.footer{
+  border-top:1px solid rgba(255,255,255,0.06);
+  padding:24px;text-align:center;font-size:12px;
+  color:rgba(255,255,255,0.2);max-width:1100px;margin:0 auto;
+}
 .footer .l{display:flex;justify-content:center;gap:16px;margin-bottom:6px;flex-wrap:wrap}
 .footer .l a{color:rgba(255,255,255,0.3);font-size:12px;transition:color 0.15s}
 .footer .l a:hover{color:#fff}
@@ -208,55 +321,98 @@ a{color:inherit;text-decoration:none}
 </head>
 <body>
 
-<div class="header">
-  <div class="logo"><span class="m">R</span> respond</div>
-  <nav>
+<!-- NAV -->
+<div class="nav">
+  <div class="logo"><span class="mark">R</span>respond</div>
+  <div class="nav-links">
     <a href="#">機能</a>
-    <a href="#">導入手順</a>
     <a href="#">料金</a>
+    <a href="#">導入</a>
     <a href="#">お問い合わせ</a>
-  </nav>
+  </div>
 </div>
 
-<div class="hero">
-  <div class="label">● AI自動応答</div>
-  <div class="h-wrap">
-    <div class="left">
-      <h1>サポートが<br>眠らない</h1>
-      <p class="sub">AIが24時間リアルタイムで自動応答。Discord、LINE、Webサイト、どこでも。設定はたった5分。</p>
-      <div class="btns">
-        <a href="#" class="btn-primary">無料で始める →</a>
-        <a href="#" class="btn-ghost">デモを見る</a>
-      </div>
+<!-- VIDEO HEADER -->
+<div class="video-header">
+  <video autoplay muted loop playsinline poster="">
+    <source src="https://cdn.pixabay.com/vimeo/895156634/waves-216277.mp4?width=1280&hash=40c6cf46622e2662aa25735697cb5d31d7c99c5f" type="video/mp4">
+  </video>
+  <div class="video-overlay"></div>
+  <div class="video-content">
+    <div class="badge">● AI自動応答</div>
+    <h1>サポートが<br><span>眠らない</span></h1>
+    <p>AIが24時間リアルタイムで自動応答。お客様の年代に合わせた自然な応対で、あなたのビジネスを支えます。</p>
+    <div class="ctas">
+      <button class="btn btn-primary">無料で始める →</button>
+      <button class="btn btn-secondary">デモを見る</button>
     </div>
-    <div class="right">
-      <div class="chat-widget">
-        <div class="bar">
-          <span class="title">ライブチャット</span>
-          <span class="status">オンライン</span>
-        </div>
-        <div class="ch-body" id="heroChatBody">
-          <div class="m b">
-            <div class="a" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7)">R</div>
-            <div class="b"><div class="l">自動応答</div>こんにちは！メッセージをどうぞ。</div>
-          </div>
-        </div>
-        <div class="typing" id="heroTyping">Rが入力中...</div>
-        <div class="ch-foot">
-          <input type="text" id="heroChatInput" placeholder="メッセージを書いてください..." onkeydown="if(event.key==='Enter')sendHeroChat()">
-          <button class="cs" onclick="sendHeroChat()" aria-label="送信">
-            <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-          </button>
-        </div>
-      </div>
+  </div>
+
+  <!-- CHAT BUBBLE -->
+  <div class="chat-bubble" id="chatBubble">
+    <div class="preview" id="chatPreview">
+      <div class="label">自動応答</div>
+      <span>こんにちは！メッセージをどうぞ。</span>
+    </div>
+    <button class="btn-chat" id="chatToggle" onclick="toggleChat()">💬</button>
+  </div>
+</div>
+
+<!-- CHAT MODAL -->
+<div class="chat-modal" id="chatModal">
+  <div class="bar">
+    <span class="title">ライブチャット</span>
+    <span class="status">オンライン</span>
+    <button class="close" onclick="toggleChat()">✕</button>
+  </div>
+  <div class="ch-body" id="chatBody">
+    <div class="m b">
+      <div class="a" style="background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.5);font-size:9px">R</div>
+      <div class="b"><div class="l">自動応答</div>こんにちは！メッセージをどうぞ。</div>
+    </div>
+  </div>
+  <div class="typing" id="chatTyping">respondが入力中...</div>
+  <div class="ch-foot">
+    <input type="text" id="chatInput" placeholder="メッセージを書いてください..." onkeydown="if(event.key==='Enter')sendChat()">
+    <button class="cs" onclick="sendChat()" aria-label="送信">
+      <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- SERVICE CARDS -->
+<div class="section">
+  <div class="section-label">SERVICES</div>
+  <h2>料金プラン</h2>
+  <p class="desc">お客様のビジネス規模に合わせて選べる3つのプラン。すべてのプランに14世代対応のAI応対が含まれています。</p>
+  
+  <div class="card-grid">
+    <div class="service-card" onmousemove="this.style.setProperty('--mx',(event.offsetX)+'px');this.style.setProperty('--my',(event.offsetY)+'px')">
+      <div class="icon">🚀</div>
+      <h3>スターター</h3>
+      <p>小規模店舗向け。月間500件までのAI応対。Webサイト埋め込み対応。</p>
+      <div class="price">¥15,000 / 月 →</div>
+    </div>
+    <div class="service-card" onmousemove="this.style.setProperty('--mx',(event.offsetX)+'px');this.style.setProperty('--my',(event.offsetY)+'px')">
+      <div class="icon">🏪</div>
+      <h3>ビジネス</h3>
+      <p>中規模店舗向け。月間2,000件対応＋LINE連携＋分析ダッシュボード。</p>
+      <div class="price">¥50,000 / 月 →</div>
+    </div>
+    <div class="service-card" onmousemove="this.style.setProperty('--mx',(event.offsetX)+'px');this.style.setProperty('--my',(event.offsetY)+'px')">
+      <div class="icon">🏢</div>
+      <h3>エンタープライズ</h3>
+      <p>無制限対応＋マルチチャネル＋専任サポート＋カスタムトレーニング。</p>
+      <div class="price">お問い合わせ →</div>
     </div>
   </div>
 </div>
 
+<!-- FEATURES -->
 <div class="section">
-  <div class="label">FEATURES</div>
+  <div class="section-label">FEATURES</div>
   <h2>必要な機能だけ</h2>
-  <p class="sub">複雑なことはAIがやります。あなたはビジネスに集中してください。</p>
+  <p class="desc">複雑なことはAIがやります。あなたはビジネスに集中してください。</p>
   <div class="mod-grid">
     <div class="mod-item"><h3>24時間自動応答</h3><p>お客様の質問をリアルタイムに理解し、自然に応答します。</p></div>
     <div class="mod-item"><h3>マルチチャンネル</h3><p>Discord、LINE、Web、Slackを一元管理。</p></div>
@@ -267,8 +423,9 @@ a{color:inherit;text-decoration:none}
   </div>
 </div>
 
+<!-- HOW IT WORKS -->
 <div class="section">
-  <div class="label">HOW IT WORKS</div>
+  <div class="section-label">HOW IT WORKS</div>
   <h2>3ステップで完了</h2>
   <div class="steps">
     <div class="step">
@@ -289,8 +446,9 @@ a{color:inherit;text-decoration:none}
   </div>
 </div>
 
+<!-- PLATFORMS -->
 <div class="section">
-  <div class="label">PLATFORMS</div>
+  <div class="section-label">PLATFORMS</div>
   <h2>対応プラットフォーム</h2>
   <div class="int-grid">
     <div class="int-chip">Discord</div>
@@ -302,19 +460,21 @@ a{color:inherit;text-decoration:none}
   </div>
 </div>
 
+<!-- CTA -->
 <div class="cta-wrap">
   <div class="cta-box">
     <h2>今すぐ始めましょう</h2>
     <p>14日間無料トライアル。クレジットカード不要。いつでも解約可能。</p>
-    <a href="#" class="btn">無料で始める →</a>
+    <a href="#" class="btn-cta">無料で始める →</a>
     <div class="small">5分で設定完了 · インストール不要</div>
   </div>
 </div>
 
+<!-- FOOTER -->
 <div class="footer">
   <div class="l">
     <a href="#">機能</a>
-    <a href="#">導入手順</a>
+    <a href="#">导入手順</a>
     <a href="#">料金</a>
     <a href="#">お問い合わせ</a>
   </div>
@@ -322,13 +482,34 @@ a{color:inherit;text-decoration:none}
 </div>
 
 <script>
-function sendHeroChat(){
-  var input=document.getElementById('heroChatInput');
-  var body=document.getElementById('heroChatBody');
-  var typing=document.getElementById('heroTyping');
+// ─── Chat ───
+function toggleChat(){
+  var m=document.getElementById('chatModal');
+  var b=document.getElementById('chatBubble');
+  var p=document.getElementById('chatPreview');
+  m.classList.toggle('open');
+  if(m.classList.contains('open')){
+    b.style.display='none';
+    document.getElementById('chatInput').focus();
+  } else {
+    b.style.display='flex';
+    p.classList.remove('show');
+    setTimeout(function(){p.classList.add('show')},100);
+  }
+}
+
+// Show preview bubble on load
+setTimeout(function(){
+  document.getElementById('chatPreview').classList.add('show');
+},1500);
+
+function sendChat(){
+  var input=document.getElementById('chatInput');
+  var body=document.getElementById('chatBody');
+  var typing=document.getElementById('chatTyping');
   var text=input.value.trim();
   if(!text)return;
-  body.innerHTML+='<div class="m u"><div class="a" style="background:rgba(255,255,255,0.15);color:#fff">U</div><div class="b">'+text.replace(/</g,'&lt;')+'<div class="t">now</div></div></div>';
+  body.innerHTML+='<div class="m u"><div class="a" style="background:rgba(255,255,255,0.1);color:#fff;font-size:9px">U</div><div class="b">'+text.replace(/</g,'&lt;')+'<div class="t">今</div></div></div>';
   input.value='';
   body.scrollTop=body.scrollHeight;
   typing.classList.add('show');
@@ -339,22 +520,19 @@ function sendHeroChat(){
     typing.classList.remove('show');
     try{
       var r=JSON.parse(xhr.responseText);
-      body.innerHTML+='<div class="m b"><div class="a" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7)">R</div><div class="b"><div class="l">auto</div>'+r.reply.replace(/</g,'&lt;')+'<div class="t">'+r.time+'</div></div></div>';
+      body.innerHTML+='<div class="m b"><div class="a" style="background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.5);font-size:9px">R</div><div class="b"><div class="l">自動応答</div>'+r.reply.replace(/</g,'&lt;')+'<div class="t">'+r.time+'</div></div></div>';
     }catch(e){
-      body.innerHTML+='<div class="m b"><div class="a" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7)">R</div><div class="b"><div class="l">auto</div>Sorry, something went wrong.<div class="t">error</div></div></div>';
+      body.innerHTML+='<div class="m b"><div class="a" style="background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.5);font-size:9px">R</div><div class="b"><div class="l">自動応答</div>申し訳ございません。エラーが発生しました。<div class="t">error</div></div></div>';
     }
     body.scrollTop=body.scrollHeight;
   };
   xhr.onerror=function(){
     typing.classList.remove('show');
-    body.innerHTML+='<div class="m b"><div class="a" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7)">R</div><div class="b"><div class="l">auto</div>Connection error. Please try again.<div class="t">error</div></div></div>';
+    body.innerHTML+='<div class="m b"><div class="a" style="background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.5);font-size:9px">R</div><div class="b"><div class="l">自動応答</div>接続エラーです。しばらくしてからお試しください。<div class="t">error</div></div></div>';
     body.scrollTop=body.scrollHeight;
   };
   xhr.send(JSON.stringify({message:text}));
 }
-document.addEventListener('DOMContentLoaded',function(){
-  document.getElementById('heroChatInput').focus();
-});
 </script>
 </body>
 </html>
