@@ -13,9 +13,9 @@ body{font-family:'Inter','Noto Sans JP',system-ui,sans-serif;background:#faf9f6;
 /* === Header === */
 .header{display:flex;align-items:center;justify-content:space-between;padding:18px 28px;max-width:1200px;margin:0 auto}
 @media(max-width:720px){.header{padding:12px 16px}}
-.header .logo{font-family:'DM Serif Display',serif;font-size:24px;font-weight:400;letter-spacing:-0.5px;display:flex;align-items:center;gap:8px}
+.header .logo{font-family:'DM Serif Display',serif;font-size:24px;font-weight:400;letter-spacing:-0.5px;display:flex;align-items:center;gap:10px}
 @media(max-width:400px){.header .logo{font-size:20px}}
-.header .logo .m{width:30px;height:30px;background:#1c1c1c;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#faf9f6;font-size:14px;font-weight:500}
+.header .logo .logo-svg{width:30px;height:30px;flex-shrink:0}
 .header nav{display:flex;gap:22px;align-items:center}
 @media(max-width:400px){.header nav{gap:12px}}
 .header nav a{color:#6b6b6b;text-decoration:none;font-size:13px;font-weight:500;transition:color 0.2s}
@@ -113,6 +113,8 @@ body{font-family:'Inter','Noto Sans JP',system-ui,sans-serif;background:#faf9f6;
 .gen-card:hover{border-color:#c8c5be}
 .gen-card .gen-age{font-family:'DM Serif Display',serif;font-size:28px;font-weight:400;color:#1c1c1c;line-height:1}
 .gen-card .gen-desc{font-size:12px;color:#6b6b6b;line-height:1.6;margin-top:6px}
+.gen-card .gen-bar{height:3px;background:#f0eee9;border-radius:2px;margin-top:10px;position:relative;overflow:hidden}
+.gen-card .gen-bar span{position:absolute;top:0;height:100%;background:#1c1c1c;border-radius:2px}
 
 /* === Philosophy === */
 .phil{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
@@ -159,16 +161,24 @@ body{font-family:'Inter','Noto Sans JP',system-ui,sans-serif;background:#faf9f6;
 /* === Footer === */
 .footer{border-top:1px solid #e5e3dc;padding:28px;text-align:center;font-size:12px;color:#b0aea8}
 @media(max-width:400px){.footer{padding:20px 12px;font-size:11px}}
-.footer .l{display:flex;justify-content:center;gap:18px;margin-bottom:8px;flex-wrap:wrap}
+.footer .l{display:flex;justify-content:center;align-items:center;gap:18px;margin-bottom:8px;flex-wrap:wrap}
 .footer .l a{color:#6b6b6b;text-decoration:none;font-size:12px}
 .footer .l a:hover{color:#1c1c1c}
+.footer .footer-logo{width:16px;height:16px;flex-shrink:0}
 </style>
 </head>
 <body>
 
 <!-- Header -->
 <div class="header">
-  <div class="logo"><span class="m">R</span> respond</div>
+  <div class="logo">
+    <svg class="logo-svg" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="1" y="1" width="20" height="20" rx="5" fill="#1c1c1c"/>
+      <path d="M10 21 7 18" stroke="#1c1c1c" stroke-width="3" stroke-linecap="round"/>
+      <text x="7" y="16" font-family="Inter, sans-serif" font-weight="700" font-size="12" fill="#faf9f6">R</text>
+    </svg>
+    respond
+  </div>
   <nav>
     <a href="#diff">違い</a>
     <a href="#generations">14世代</a>
@@ -200,6 +210,21 @@ body{font-family:'Inter','Noto Sans JP',system-ui,sans-serif;background:#faf9f6;
           <div class="m b">
             <div class="a" style="background:#1c1c1c">R</div>
             <div class="b"><div class="l">自動応対</div>こんにちは！何かお困りですか？お気軽にどうぞ。<div class="t">今すぐ · 自動</div></div>
+          </div>
+          <div class="m u">
+            <div class="a" style="background:#b0aea8">60</div>
+            <div class="b" style="background:#f0eee9;color:#1c1c1c;border-bottom-right-radius:3px">すみませんが、こちらの商品の値段を教えていただけませんでしょうか。<div class="t" style="color:#b0aea8">60代 · お客様</div></div>
+          </div>
+          <div class="m b">
+            <div class="a" style="background:#1c1c1c">R</div>
+            <div class="b"><div class="l">60代向け応対</div>こちらでございますね。こちらの商品は1,200円でございます。ご不明な点がございましたら、何なりとお申し付けくださいませ。<div class="t">自動 · 敬語最大</div></div>
+          </div>
+          <div class="m u">
+            <div class="a" style="background:#b0aea8">20</div>
+            <div class="b" style="background:#f0eee9;color:#1c1c1c;border-bottom-right-radius:3px">これいくらですか？<div class="t" style="color:#b0aea8">20代 · お客様</div></div>
+          </div>
+          <div class="m b">
+            <div class="b"><div class="l">20代向け応対</div>1,200円です！人気の商品で残りわずかですよ。よろしければいかがですか？<div class="t">自動 · 軽め敬語</div></div>
           </div>
         </div>
         <div class="typing" id="heroTyping">Rが入力中...</div>
@@ -237,20 +262,20 @@ body{font-family:'Inter','Noto Sans JP',system-ui,sans-serif;background:#faf9f6;
     <p>お客様の話し方・年齢層から世代を推定し、それに合わせた語彙・敬語レベル・文体で応答します。ボットは常に同じ丁寧さを維持。変化するのは語彙・敬語レベル・文体のみです。</p>
   </div>
   <div class="gen-grid">
-    <div class="gen-card"><div class="gen-age">20代前半</div><div class="gen-desc">です・ます調、カタカナ語OK、短文、明るく元気</div></div>
-    <div class="gen-card"><div class="gen-age">20代後半</div><div class="gen-desc">ビジネス敬語、カタカナ語自然に、テキパキ</div></div>
-    <div class="gen-card"><div class="gen-age">30代前半</div><div class="gen-desc">敬語に最も敏感、させていただきます多用、丁寧で誠実</div></div>
-    <div class="gen-card"><div class="gen-age">30代後半</div><div class="gen-desc">尊敬語・謙譲語正確、落ち着き、具体的な説明</div></div>
-    <div class="gen-card"><div class="gen-age">40代前半</div><div class="gen-desc">でございます・でいらっしゃいますか、カタカナ語最小限</div></div>
-    <div class="gen-card"><div class="gen-age">40代後半</div><div class="gen-desc">格式高め、に関しまして・の件ですが自然に</div></div>
-    <div class="gen-card"><div class="gen-age">50代前半</div><div class="gen-desc">品格ある敬語、古風な丁寧表現、冗談なし</div></div>
-    <div class="gen-card"><div class="gen-age">50代後半</div><div class="gen-desc">誠に恐れ入りますが自然に、謙虚で控えめ</div></div>
-    <div class="gen-card"><div class="gen-age">60代前半</div><div class="gen-desc">女性＝ですわ・ますわよ／男性＝でございますな、温かみ</div></div>
-    <div class="gen-card"><div class="gen-age">60代後半</div><div class="gen-desc">女性＝わ・わね頻度高／男性＝であったと思いますが、穏やか</div></div>
-    <div class="gen-card"><div class="gen-age">70代前半</div><div class="gen-desc">女性＝ますの・ますのよ／男性＝でございますな、新外来語NG</div></div>
-    <div class="gen-card"><div class="gen-age">70代後半</div><div class="gen-desc">昔の言い回し、カタカナ語NG、確認繰り返しあり</div></div>
-    <div class="gen-card"><div class="gen-age">80代前半</div><div class="gen-desc">戦前教育の影響、漢語調、でございますね多い</div></div>
-    <div class="gen-card"><div class="gen-age">80代後半</div><div class="gen-desc">明治〜大正語ベース、文語調、にございます・あそばせ</div></div>
+    <div class="gen-card"><div class="gen-age">20代前半</div><div class="gen-bar"><span style="left:0%;width:8%"></span></div><div class="gen-desc">です・ます調、カタカナ語OK、短文、明るく元気</div></div>
+    <div class="gen-card"><div class="gen-age">20代後半</div><div class="gen-bar"><span style="left:8%;width:10%"></span></div><div class="gen-desc">ビジネス敬語、カタカナ語自然に、テキパキ</div></div>
+    <div class="gen-card"><div class="gen-age">30代前半</div><div class="gen-bar"><span style="left:18%;width:8%"></span></div><div class="gen-desc">敬語に最も敏感、させていただきます多用、丁寧で誠実</div></div>
+    <div class="gen-card"><div class="gen-age">30代後半</div><div class="gen-bar"><span style="left:26%;width:8%"></span></div><div class="gen-desc">尊敬語・謙譲語正確、落ち着き、具体的な説明</div></div>
+    <div class="gen-card"><div class="gen-age">40代前半</div><div class="gen-bar"><span style="left:34%;width:8%"></span></div><div class="gen-desc">でございます・でいらっしゃいますか、カタカナ語最小限</div></div>
+    <div class="gen-card"><div class="gen-age">40代後半</div><div class="gen-bar"><span style="left:42%;width:8%"></span></div><div class="gen-desc">格式高め、に関しまして・の件ですが自然に</div></div>
+    <div class="gen-card"><div class="gen-age">50代前半</div><div class="gen-bar"><span style="left:50%;width:8%"></span></div><div class="gen-desc">品格ある敬語、古風な丁寧表現、冗談なし</div></div>
+    <div class="gen-card"><div class="gen-age">50代後半</div><div class="gen-bar"><span style="left:58%;width:8%"></span></div><div class="gen-desc">誠に恐れ入りますが自然に、謙虚で控えめ</div></div>
+    <div class="gen-card"><div class="gen-age">60代前半</div><div class="gen-bar"><span style="left:66%;width:8%"></span></div><div class="gen-desc">女性＝ですわ・ますわよ／男性＝でございますな、温かみ</div></div>
+    <div class="gen-card"><div class="gen-age">60代後半</div><div class="gen-bar"><span style="left:74%;width:8%"></span></div><div class="gen-desc">女性＝わ・わね頻度高／男性＝であったと思いますが、穏やか</div></div>
+    <div class="gen-card"><div class="gen-age">70代前半</div><div class="gen-bar"><span style="left:82%;width:8%"></span></div><div class="gen-desc">女性＝ますの・ますのよ／男性＝でございますな、新外来語NG</div></div>
+    <div class="gen-card"><div class="gen-age">70代後半</div><div class="gen-bar"><span style="left:90%;width:8%"></span></div><div class="gen-desc">昔の言い回し、カタカナ語NG、確認繰り返しあり</div></div>
+    <div class="gen-card"><div class="gen-age">80代前半</div><div class="gen-bar"><span style="left:98%;width:8%"></span></div><div class="gen-desc">戦前教育の影響、漢語調、でございますね多い</div></div>
+    <div class="gen-card"><div class="gen-age">80代後半</div><div class="gen-bar"><span style="left:106%;width:12%"></span></div><div class="gen-desc">明治〜大正語ベース、文語調、にございます・あそばせ</div></div>
   </div>
 </div>
 
@@ -353,6 +378,11 @@ body{font-family:'Inter','Noto Sans JP',system-ui,sans-serif;background:#faf9f6;
 <!-- Footer -->
 <div class="footer">
   <div class="l">
+    <svg class="footer-logo" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="1" y="1" width="20" height="20" rx="5" fill="#b0aea8"/>
+      <path d="M10 21 7 18" stroke="#b0aea8" stroke-width="3" stroke-linecap="round"/>
+      <text x="7" y="16" font-family="Inter, sans-serif" font-weight="700" font-size="12" fill="#faf9f6">R</text>
+    </svg>
     <a href="#diff">違い</a>
     <a href="#generations">14世代</a>
     <a href="#philosophy">哲学</a>
