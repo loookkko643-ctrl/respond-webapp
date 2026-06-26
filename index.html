@@ -3,513 +3,378 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Respond — AI自動応答</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<title>Respond — 違和感のないAI自動応対</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Inter','Noto Sans JP',system-ui,sans-serif;background:#000;color:#fff;overflow-x:hidden}
-::selection{background:#5e6ad2;color:#fff}
-a{color:inherit;text-decoration:none}
+body{font-family:'Inter','Noto Sans JP',system-ui,sans-serif;background:#faf9f6;color:#1c1c1c;overflow-x:hidden}
+::selection{background:#1c1c1c;color:#faf9f6}
 
-/* ─── NAV ─── */
-.nav{
-  position:fixed;top:0;left:0;right:0;z-index:100;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:16px 32px;
-  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
-  background:rgba(0,0,0,0.5);
-  border-bottom:1px solid rgba(255,255,255,0.04);
-}
-@media(max-width:720px){.nav{padding:14px 16px}}
-.nav .logo{
-  font-weight:600;font-size:15px;color:#fff;
-  display:flex;align-items:center;gap:8px;
-}
-.nav .logo .mark{
-  width:24px;height:24px;background:#5e6ad2;border-radius:5px;
-  display:flex;align-items:center;justify-content:center;
-  color:#fff;font-size:10px;font-weight:700;
-}
-.nav-links{display:flex;gap:24px;align-items:center}
-@media(max-width:640px){.nav-links{gap:12px}}
-.nav-links a{
-  color:rgba(255,255,255,0.45);font-size:13px;font-weight:500;transition:color 0.15s;
-}
-.nav-links a:hover{color:#fff}
+/* === Header === */
+.header{display:flex;align-items:center;justify-content:space-between;padding:18px 28px;max-width:1200px;margin:0 auto}
+@media(max-width:720px){.header{padding:12px 16px}}
+.header .logo{font-weight:700;font-size:14px;letter-spacing:-0.2px;display:flex;align-items:center;gap:8px}
+@media(max-width:400px){.header .logo{font-size:12px}}
+.header .logo .m{width:26px;height:26px;background:#1c1c1c;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#faf9f6;font-size:12px;font-weight:700}
+.header nav{display:flex;gap:22px;align-items:center}
+@media(max-width:400px){.header nav{gap:12px}}
+.header nav a{color:#6b6b6b;text-decoration:none;font-size:13px;font-weight:500;transition:color 0.2s}
+@media(max-width:400px){.header nav a{font-size:11px;display:none}.header nav a.cta{display:inline-block;font-size:11px;padding:6px 12px}}
+.header nav a:hover{color:#1c1c1c}
+.header .cta{background:#1c1c1c;color:#faf9f6;padding:8px 18px;border-radius:8px;text-decoration:none;font-size:12px;font-weight:600;transition:all 0.2s}
+.header .cta:hover{opacity:0.85}
 
-/* ─── VIDEO HEADER ─── */
-.video-header{
-  position:relative;width:100%;height:100vh;overflow:hidden;
-  display:flex;align-items:center;justify-content:center;
-}
-.video-header video{
-  position:absolute;top:50%;left:50%;
-  min-width:100%;min-height:100%;
-  width:auto;height:auto;
-  transform:translate(-50%,-50%);
-  object-fit:cover;
-  filter:brightness(0.35) saturate(1.1);
-}
-.video-overlay{
-  position:absolute;inset:0;
-  background:linear-gradient(180deg,rgba(0,0,0,0.2) 0%,rgba(0,0,0,0.7) 100%);
-}
-.video-content{
-  position:relative;z-index:2;text-align:center;max-width:700px;padding:0 24px;
-}
-.video-content .badge{
-  display:inline-block;font-size:11px;font-weight:500;
-  letter-spacing:2px;text-transform:uppercase;
-  color:rgba(255,255,255,0.35);
-  border:1px solid rgba(255,255,255,0.08);
-  padding:5px 14px;border-radius:20px;margin-bottom:20px;
-}
-.video-content h1{
-  font-size:clamp(40px,6vw,72px);font-weight:600;
-  letter-spacing:-2px;line-height:1.05;margin-bottom:16px;color:#fff;
-}
-.video-content h1 span{color:#5e6ad2}
-.video-content p{
-  font-size:15px;color:rgba(255,255,255,0.45);
-  line-height:1.7;max-width:460px;margin:0 auto 28px;
-}
-.ctas{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-.btn{
-  padding:11px 24px;border-radius:8px;font-size:13px;font-weight:500;
-  transition:all 0.2s;cursor:pointer;border:none;
-  display:inline-flex;align-items:center;gap:6px;
-}
-.btn-primary{background:#5e6ad2;color:#fff}
-.btn-primary:hover{background:#4f5ac4;transform:translateY(-1px)}
-.btn-secondary{
-  background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.6);
-  border:1px solid rgba(255,255,255,0.08);
-}
-.btn-secondary:hover{background:rgba(255,255,255,0.1);color:#fff;transform:translateY(-1px)}
+/* === Hero === */
+.hero{padding:100px 28px 60px;max-width:1200px;margin:0 auto}
+@media(max-width:720px){.hero{padding:40px 16px 30px;text-align:left}}
+@media(max-width:400px){.hero{padding:28px 12px 20px}}
+.hero .tag{display:inline-block;font-size:12px;font-weight:600;color:#6b6b6b;letter-spacing:0.3px;text-transform:uppercase;margin-bottom:24px;border:1px solid #e5e3dc;padding:5px 14px;border-radius:100px}
+@media(max-width:400px){.hero .tag{font-size:10px;padding:4px 10px;margin-bottom:16px}}
+.hero .h-wrap{display:flex;justify-content:space-between;align-items:flex-start;gap:40px}
+@media(max-width:900px){.hero .h-wrap{flex-direction:column;gap:30px}}
+.hero .left{flex:1}
+.hero h1{font-family:'DM Serif Display',serif;font-size:clamp(36px,5.5vw,64px);line-height:1.05;letter-spacing:-1px;color:#1c1c1c;margin-bottom:20px;font-weight:400}
+@media(max-width:400px){.hero h1{font-size:clamp(28px,8vw,36px);letter-spacing:-0.5px}}
+.hero h1 em{font-style:italic;text-decoration:underline;text-decoration-color:#e5e3dc;text-underline-offset:6px;text-decoration-thickness:2px}
+.hero p{font-size:15px;color:#6b6b6b;line-height:1.7;max-width:450px;margin-bottom:32px}
+@media(max-width:420px){.hero p{font-size:14px}}
+.hero .btns{display:flex;gap:10px}
+@media(max-width:720px){.hero .btns{justify-content:flex-start}}
+@media(max-width:400px){.hero .btns{flex-direction:column;gap:8px}.hero .btn-primary,.hero .btn-ghost{text-align:center;padding:10px 20px}}
+.hero .btn-primary{background:#1c1c1c;color:#faf9f6;padding:12px 26px;border-radius:8px;text-decoration:none;font-weight:600;font-size:13px;transition:all 0.2s}
+.hero .btn-primary:hover{opacity:0.85}
+.hero .btn-ghost{color:#1c1c1c;padding:12px 26px;border-radius:8px;text-decoration:none;border:1px solid #e5e3dc;font-size:13px;font-weight:500;transition:all 0.2s}
+.hero .btn-ghost:hover{border-color:#1c1c1c}
+.hero .right{width:380px;flex-shrink:0;position:relative}
+@media(max-width:900px){.hero .right{width:100%;max-width:420px;margin:0 auto}}
+@media(max-width:420px){.hero .right{max-width:100%}}
 
-/* ─── CHAT WIDGET (video header 하단) ─── */
-.chat-bubble{
-  position:absolute;bottom:80px;right:32px;z-index:3;
-  display:flex;flex-direction:column;align-items:flex-end;gap:8px;
-}
-@media(max-width:720px){.chat-bubble{right:16px;bottom:60px}}
-.chat-bubble .preview{
-  background:rgba(255,255,255,0.04);
-  border:1px solid rgba(255,255,255,0.08);
-  backdrop-filter:blur(16px);
-  border-radius:12px;
-  padding:14px 16px;
-  width:240px;
-  font-size:13px;line-height:1.5;
-  color:rgba(255,255,255,0.7);
-  display:none;
-}
-.chat-bubble .preview.show{display:block;animation:fadeUp 0.3s ease-out}
-@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.chat-bubble .preview .label{font-size:10px;color:rgba(255,255,255,0.3);margin-bottom:4px;font-weight:500;letter-spacing:0.5px}
-.chat-bubble .btn-chat{
-  width:56px;height:56px;border-radius:50%;
-  background:#5e6ad2;color:#fff;border:none;
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;font-size:22px;
-  box-shadow:0 4px 20px rgba(94,106,210,0.3);
-  transition:all 0.2s;
-}
-.chat-bubble .btn-chat:hover{transform:scale(1.05);box-shadow:0 6px 28px rgba(94,106,210,0.4)}
+/* === Chat Widget === */
+.chat-widget{background:#fff;border-radius:16px;padding:0;border:1px solid #ece8e0;box-shadow:0 4px 24px rgba(0,0,0,0.04),0 1px 4px rgba(0,0,0,0.02);position:relative;display:flex;flex-direction:column;height:440px;overflow:hidden;transition:box-shadow 0.3s}
+.chat-widget:hover{box-shadow:0 8px 40px rgba(0,0,0,0.06),0 1px 4px rgba(0,0,0,0.02)}
+@media(max-width:900px){.chat-widget{height:380px}}
+@media(max-width:420px){.chat-widget{border-radius:14px;height:340px}}
+.chat-widget .bar{display:flex;align-items:center;gap:8px;padding:14px 18px;border-bottom:1px solid #f0eee9;flex-shrink:0;background:#fcfbf9}
+.chat-widget .bar .title{font-size:12px;font-weight:600;color:#1c1c1c;letter-spacing:-0.1px}
+.chat-widget .bar .status{margin-left:auto;display:flex;align-items:center;gap:4px;font-size:10px;font-weight:500;color:#6bcb77;letter-spacing:0.2px}
+.chat-widget .bar .status::before{content:'';width:5px;height:5px;border-radius:50%;background:#6bcb77;display:inline-block}
+.chat-widget .ch-body{overflow-y:auto;flex:1;padding:16px 16px 8px;scroll-behavior:smooth;background:#fff}
+.chat-widget .ch-body::-webkit-scrollbar{width:3px}
+.chat-widget .ch-body::-webkit-scrollbar-thumb{background:#ddd9d0;border-radius:2px}
+.chat-widget .m{display:flex;gap:10px;margin-bottom:14px;animation:fadeIn 0.25s ease-out}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.chat-widget .m .a{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;margin-top:4px}
+.chat-widget .m .b{padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.55;max-width:84%;word-break:break-word}
+@media(max-width:400px){.chat-widget .m .b{font-size:12px;padding:8px 12px;max-width:90%}}
+.chat-widget .m.u{flex-direction:row-reverse}
+.chat-widget .m.u .b{background:#1c1c1c;color:#fff;border-bottom-right-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,0.08)}
+.chat-widget .m.b .b{background:#f4f2ec;border-bottom-left-radius:3px;color:#1c1c1c;box-shadow:0 1px 2px rgba(0,0,0,0.02)}
+.chat-widget .m .b .t{font-size:9px;color:#b0aea8;margin-top:5px;text-align:right;opacity:0.7}
+.chat-widget .m.u .b .t{color:rgba(255,255,255,0.45)}
+.chat-widget .m .b .l{font-size:8px;color:#6b6b6b;font-weight:600;text-transform:uppercase;letter-spacing:0.4px;margin-bottom:4px;opacity:0.6}
+.chat-widget .ch-foot{display:flex;align-items:center;gap:0;padding:10px 14px 12px;border-top:1px solid #f0eee9;flex-shrink:0;margin-top:auto;background:#fcfbf9}
+.chat-widget .ch-foot input{flex:1;border:1px solid #e5e3dc;border-radius:10px;padding:10px 14px;font-size:13px;outline:none;font-family:'Inter','Noto Sans JP',sans-serif;color:#1c1c1c;background:#fff;transition:border-color 0.2s,box-shadow 0.2s}
+.chat-widget .ch-foot input::placeholder{color:#c5c1b8;font-weight:400}
+.chat-widget .ch-foot input:focus{border-color:#1c1c1c;box-shadow:0 0 0 3px rgba(28,28,28,0.04)}
+.chat-widget .ch-foot .cs{margin-left:8px;width:36px;height:36px;border-radius:10px;background:#1c1c1c;color:#fff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;flex-shrink:0}
+.chat-widget .ch-foot .cs:hover{opacity:0.88;transform:scale(1.04)}
+.chat-widget .ch-foot .cs:active{transform:scale(0.96)}
+.chat-widget .ch-foot .cs svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.chat-widget .typing{font-size:11px;color:#b0aea8;padding:0 18px 6px;display:none;font-weight:400;letter-spacing:0.1px}
+.chat-widget .typing.show{display:block;animation:typingPulse 1.2s ease-in-out infinite}
+@keyframes typingPulse{0%,100%{opacity:0.5}50%{opacity:1}}
 
-/* ─── CHAT MODAL ─── */
-.chat-modal{
-  position:fixed;bottom:90px;right:24px;z-index:99;
-  width:360px;max-width:calc(100vw - 32px);
-  background:#0a0a0a;
-  border:1px solid rgba(255,255,255,0.08);
-  border-radius:14px;
-  display:none;flex-direction:column;
-  height:480px;max-height:calc(100vh - 120px);
-  box-shadow:0 20px 60px rgba(0,0,0,0.6);
-  animation:modalIn 0.2s ease-out;
-}
-@keyframes modalIn{from{opacity:0;transform:translateY(10px) scale(0.97)}to{opacity:1;transform:translateY(0) scale(1)}}
-.chat-modal.open{display:flex}
-.chat-modal .bar{
-  display:flex;align-items:center;gap:8px;
-  padding:14px 16px;
-  border-bottom:1px solid rgba(255,255,255,0.06);
-}
-.chat-modal .bar .title{font-size:13px;font-weight:500;color:rgba(255,255,255,0.8)}
-.chat-modal .bar .status{margin-left:auto;font-size:11px;color:rgba(255,255,255,0.3);display:flex;align-items:center;gap:5px}
-.chat-modal .bar .status:before{content:'';width:5px;height:5px;border-radius:50%;background:#22c55e;display:inline-block}
-.chat-modal .bar .close{
-  background:none;border:none;color:rgba(255,255,255,0.3);cursor:pointer;
-  font-size:18px;padding:0 4px;transition:color 0.15s;
-}
-.chat-modal .bar .close:hover{color:#fff}
-.ch-body{
-  overflow-y:auto;flex:1;padding:14px 16px 8px;scroll-behavior:smooth;
-}
-.ch-body::-webkit-scrollbar{width:3px}
-.ch-body::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);border-radius:2px}
-.ch-body .m{display:flex;gap:10px;margin-bottom:14px;animation:msgIn 0.2s ease-out}
-@keyframes msgIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
-.ch-body .m .a{
-  width:24px;height:24px;border-radius:6px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:10px;font-weight:600;flex-shrink:0;margin-top:2px;
-}
-.ch-body .m .b{
-  padding:8px 12px;border-radius:8px;font-size:13px;
-  line-height:1.5;max-width:84%;word-break:break-word;
-}
-.ch-body .m.u{flex-direction:row-reverse}
-.ch-body .m.u .b{background:rgba(255,255,255,0.08);color:#fff}
-.ch-body .m.b .b{background:rgba(255,255,255,0.03);color:rgba(255,255,255,0.85);border:1px solid rgba(255,255,255,0.06)}
-.ch-body .m .b .l{font-size:9px;color:rgba(255,255,255,0.25);font-weight:500;margin-bottom:3px;text-transform:uppercase}
-.ch-body .m .b .t{font-size:9px;color:rgba(255,255,255,0.15);margin-top:4px;text-align:right}
-.ch-foot{
-  display:flex;align-items:center;gap:0;
-  padding:8px 12px 12px;
-  border-top:1px solid rgba(255,255,255,0.06);
-}
-.ch-foot input{
-  flex:1;border:1px solid rgba(255,255,255,0.08);border-radius:8px;
-  padding:9px 12px;font-size:13px;outline:none;
-  font-family:'Inter','Noto Sans JP',sans-serif;
-  color:#fff;background:rgba(255,255,255,0.03);
-  transition:border-color 0.15s;
-}
-.ch-foot input::placeholder{color:rgba(255,255,255,0.2)}
-.ch-foot input:focus{border-color:rgba(94,106,210,0.3)}
-.ch-foot .cs{
-  margin-left:6px;width:34px;height:34px;border-radius:8px;
-  background:#5e6ad2;color:#fff;border:none;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  transition:all 0.15s;flex-shrink:0;
-}
-.ch-foot .cs:hover{background:#4f5ac4}
-.ch-foot .cs svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.typing{font-size:10px;color:rgba(255,255,255,0.15);padding:0 16px 6px;display:none}
-.typing.show{display:block}
+/* === Section common === */
+.section{padding:80px 28px;max-width:1200px;margin:0 auto}
+@media(max-width:720px){.section{padding:40px 16px}}
+@media(max-width:400px){.section{padding:28px 12px}}
+.section .label{font-size:11px;font-weight:600;color:#6b6b6b;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px}
+.section h2{font-family:'DM Serif Display',serif;font-size:clamp(28px,4vw,42px);font-weight:400;letter-spacing:-0.5px;color:#1c1c1c;margin-bottom:10px}
+@media(max-width:400px){.section h2{font-size:clamp(22px,6vw,28px)}}
+.section h2 em{font-style:italic}
+.section .sub{color:#6b6b6b;font-size:14px;line-height:1.6;margin-bottom:36px;max-width:400px}
 
-/* ─── SECTIONS (common) ─── */
-.section{max-width:1100px;margin:0 auto;padding:100px 24px}
-@media(max-width:720px){.section{padding:60px 16px}}
-.section-label{
-  font-size:11px;font-weight:500;color:rgba(255,255,255,0.2);
-  letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;
-}
-.section h2{
-  font-size:clamp(26px,3.5vw,40px);font-weight:600;
-  letter-spacing:-1px;margin-bottom:12px;color:#fff;
-}
-.section .desc{
-  color:rgba(255,255,255,0.35);font-size:14px;
-  line-height:1.6;max-width:480px;margin-bottom:48px;
-}
+/* === 5 Differences grid === */
+.diff-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:800px){.diff-grid{grid-template-columns:1fr;gap:10px}}
+@media(max-width:400px){.diff-grid{gap:8px}}
+.diff-item{background:#fff;border:1px solid #e5e3dc;border-radius:10px;padding:24px 20px;transition:all 0.2s}
+.diff-item:hover{border-color:#c8c5be}
+.diff-item .ic{width:32px;height:32px;border-radius:8px;background:#f5f3ee;display:flex;align-items:center;justify-content:center;font-size:15px;margin-bottom:12px}
+.diff-item h3{font-weight:600;font-size:14px;margin-bottom:4px}
+.diff-item p{font-size:12px;color:#6b6b6b;line-height:1.6}
 
-/* ─── SERVICE CARDS ─── */
-.card-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:20px;
-}
-@media(max-width:960px){.card-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:640px){.card-grid{grid-template-columns:1fr}}
+/* === Generations === */
+.gen-intro{margin-bottom:36px}
+.gen-intro p{font-size:14px;color:#6b6b6b;line-height:1.7;max-width:500px}
+.gen-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+@media(max-width:400px){.gen-grid{grid-template-columns:1fr;gap:8px}}
+.gen-card{background:#fff;border:1px solid #e5e3dc;border-radius:10px;padding:18px 20px;transition:all 0.2s}
+.gen-card:hover{border-color:#c8c5be}
+.gen-card .gen-age{font-family:'DM Serif Display',serif;font-size:28px;font-weight:400;color:#1c1c1c;line-height:1}
+.gen-card .gen-desc{font-size:12px;color:#6b6b6b;line-height:1.6;margin-top:6px}
 
-.service-card{
-  background:rgba(255,255,255,0.02);
-  border:1px solid rgba(255,255,255,0.06);
-  border-radius:12px;
-  padding:32px 28px;
-  transition:all 0.35s cubic-bezier(0.16,1,0.3,1);
-  cursor:default;
-  position:relative;
-  overflow:hidden;
-}
-.service-card::before{
-  content:'';position:absolute;inset:0;
-  background:radial-gradient(500px circle at var(--mx,50%) var(--my,50%),rgba(94,106,210,0.06),transparent 50%);
-  opacity:0;transition:opacity 0.35s;
-}
-.service-card:hover::before{opacity:1}
-.service-card:hover{
-  border-color:rgba(94,106,210,0.25);
-  transform:translateY(-3px);
-  background:rgba(255,255,255,0.04);
-}
-.service-card .icon{
-  width:40px;height:40px;border-radius:10px;
-  background:rgba(94,106,210,0.08);
-  display:flex;align-items:center;justify-content:center;
-  margin-bottom:18px;font-size:18px;
-  transition:all 0.3s;
-}
-.service-card:hover .icon{
-  background:rgba(94,106,210,0.18);
-  transform:scale(1.05);
-}
-.service-card h3{
-  font-size:17px;font-weight:600;margin-bottom:8px;
-  color:#fff;letter-spacing:-0.2px;
-}
-.service-card p{
-  font-size:13px;color:rgba(255,255,255,0.4);line-height:1.6;
-}
-.service-card .price{
-  display:inline-block;margin-top:14px;
-  font-size:13px;font-weight:500;color:#5e6ad2;
-  padding:3px 0;
-  border-bottom:1px solid rgba(94,106,210,0.15);
-  transition:border-color 0.2s;
-}
-.service-card:hover .price{border-color:#5e6ad2}
+/* === Philosophy === */
+.phil{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+@media(max-width:720px){.phil{grid-template-columns:1fr;gap:16px}}
+.phil-item{background:#fff;border:1px solid #e5e3dc;border-radius:10px;padding:28px 22px}
+.phil-item .num{font-family:'DM Serif Display',serif;font-size:36px;line-height:1;color:#b0aea8;margin-bottom:10px}
+.phil-item h3{font-weight:600;font-size:15px;margin-bottom:4px}
+.phil-item p{font-size:13px;color:#6b6b6b;line-height:1.6}
 
-/* ─── FEATURES GRID ─── */
-.mod-grid{
-  display:grid;grid-template-columns:repeat(3,1fr);
-  gap:2px;border-radius:8px;overflow:hidden;
-  border:1px solid rgba(255,255,255,0.06);
-}
-@media(max-width:800px){.mod-grid{grid-template-columns:1fr}}
-.mod-item{background:#000;padding:24px 20px;transition:background 0.15s}
-.mod-item:hover{background:rgba(255,255,255,0.02)}
-.mod-item h3{font-weight:500;font-size:14px;margin-bottom:4px;color:#fff}
-.mod-item p{font-size:12px;color:rgba(255,255,255,0.35);line-height:1.6}
+/* === Market comparison === */
+.comp-table{width:100%;border-collapse:separate;border-spacing:0;font-size:13px;border-radius:10px;overflow:hidden;border:1px solid #e5e3dc}
+.comp-table th,.comp-table td{padding:12px 16px;text-align:left;border-bottom:1px solid #f0eee9}
+@media(max-width:720px){.comp-table th,.comp-table td{padding:8px 10px;font-size:11px}}
+.comp-table th{background:#fcfbf9;font-weight:600;font-size:12px;color:#6b6b6b;letter-spacing:0.3px;text-transform:uppercase}
+.comp-table tr:last-child td{border-bottom:none}
+.comp-table tr:last-child th{border-bottom:none}
+.comp-table td:first-child{font-weight:500}
+.comp-table .highlight{background:#faf9f6}
+.comp-table .highlight td{color:#1c1c1c;font-weight:500}
 
-/* ─── STEPS ─── */
-.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;border-radius:8px;overflow:hidden;border:1px solid rgba(255,255,255,0.06)}
-@media(max-width:720px){.steps{grid-template-columns:1fr}}
-.step{background:#000;padding:28px 20px;border-right:1px solid rgba(255,255,255,0.06)}
-.step:last-child{border-right:none}
-@media(max-width:720px){.step{border-right:none;border-bottom:1px solid rgba(255,255,255,0.06)}.step:last-child{border-bottom:none}}
-.step .num{font-size:28px;font-weight:600;color:rgba(255,255,255,0.08);margin-bottom:8px;letter-spacing:-0.5px}
-.step h3{font-weight:500;font-size:14px;margin-bottom:3px;color:#fff}
-.step p{font-size:12px;color:rgba(255,255,255,0.35);line-height:1.6}
+/* === CTA === */
+.cta-wrap{padding:60px 0}
+@media(max-width:720px){.cta-wrap{padding:20px 0}}
+.cta-box{background:#1c1c1c;border-radius:16px;padding:56px 32px;text-align:center;color:#faf9f6}
+@media(max-width:720px){.cta-box{padding:36px 20px;border-radius:12px}}
+@media(max-width:400px){.cta-box{padding:28px 16px;border-radius:10px}}
+.cta-box h2{font-family:'DM Serif Display',serif;font-size:clamp(28px,4vw,38px);font-weight:400;margin-bottom:10px;color:#faf9f6;letter-spacing:-0.5px}
+.cta-box p{color:rgba(255,255,255,0.5);font-size:14px;margin-bottom:28px;max-width:450px;margin-left:auto;margin-right:auto}
+.cta-box .btn{background:#faf9f6;color:#1c1c1c;padding:12px 30px;border-radius:8px;text-decoration:none;font-weight:600;font-size:13px;display:inline-block;transition:all 0.2s}
+.cta-box .btn:hover{opacity:0.85}
+.cta-box .small{font-size:11px;color:rgba(255,255,255,0.25);margin-top:14px}
 
-/* ─── PLATFORMS ─── */
-.int-grid{display:flex;flex-wrap:wrap;gap:6px}
-.int-chip{
-  border:1px solid rgba(255,255,255,0.08);border-radius:6px;
-  padding:8px 14px;font-size:12px;color:rgba(255,255,255,0.5);
-  display:flex;align-items:center;gap:5px;font-weight:400;
-  background:#000;transition:border-color 0.15s,color 0.15s;
-}
-.int-chip:hover{border-color:rgba(255,255,255,0.15);color:#fff}
+/* === Pricing === */
+.price-wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:30px}
+@media(max-width:720px){.price-wrap{grid-template-columns:1fr;gap:10px}}
+.price-card{background:#fff;border:1px solid #e5e3dc;border-radius:10px;padding:24px 20px;text-align:center;transition:all 0.2s}
+.price-card:hover{border-color:#c8c5be}
+.price-card.featured{border-color:#1c1c1c;background:#fcfbf9}
+.price-card .price-label{font-size:11px;font-weight:600;color:#6b6b6b;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:8px}
+.price-card .price-amount{font-family:'DM Serif Display',serif;font-size:32px;font-weight:400;color:#1c1c1c}
+.price-card .price-amount small{font-size:14px;color:#b0aea8}
+.price-card p{font-size:12px;color:#6b6b6b;line-height:1.6;margin-top:8px}
 
-/* ─── CTA ─── */
-.cta-wrap{padding:60px 24px;max-width:1100px;margin:0 auto}
-.cta-box{
-  border:1px solid rgba(255,255,255,0.08);border-radius:10px;
-  padding:56px 32px;text-align:center;background:#000;
-}
-@media(max-width:720px){.cta-box{padding:36px 20px}}
-.cta-box h2{font-size:clamp(22px,3vw,32px);font-weight:600;letter-spacing:-0.5px;margin-bottom:8px;color:#fff}
-.cta-box p{color:rgba(255,255,255,0.3);font-size:13px;margin-bottom:24px}
-.cta-box .btn-cta{background:#5e6ad2;color:#fff;padding:10px 24px;border-radius:6px;font-weight:500;font-size:13px;display:inline-block;transition:all 0.15s}
-.cta-box .btn-cta:hover{background:#4f5ac4;transform:translateY(-1px)}
-.cta-box .small{font-size:11px;color:rgba(255,255,255,0.15);margin-top:12px}
-
-/* ─── FOOTER ─── */
-.footer{
-  border-top:1px solid rgba(255,255,255,0.06);
-  padding:24px;text-align:center;font-size:12px;
-  color:rgba(255,255,255,0.2);max-width:1100px;margin:0 auto;
-}
-.footer .l{display:flex;justify-content:center;gap:16px;margin-bottom:6px;flex-wrap:wrap}
-.footer .l a{color:rgba(255,255,255,0.3);font-size:12px;transition:color 0.15s}
-.footer .l a:hover{color:#fff}
+/* === Footer === */
+.footer{border-top:1px solid #e5e3dc;padding:28px;text-align:center;font-size:12px;color:#b0aea8}
+@media(max-width:400px){.footer{padding:20px 12px;font-size:11px}}
+.footer .l{display:flex;justify-content:center;gap:18px;margin-bottom:8px;flex-wrap:wrap}
+.footer .l a{color:#6b6b6b;text-decoration:none;font-size:12px}
+.footer .l a:hover{color:#1c1c1c}
 </style>
 </head>
 <body>
 
-<!-- NAV -->
-<div class="nav">
-  <div class="logo"><span class="mark">R</span>respond</div>
-  <div class="nav-links">
-    <a href="#">機能</a>
-    <a href="#">料金</a>
-    <a href="#">導入</a>
-    <a href="#">お問い合わせ</a>
-  </div>
+<!-- Header -->
+<div class="header">
+  <div class="logo"><span class="m">R</span> respond</div>
+  <nav>
+    <a href="#diff">違い</a>
+    <a href="#generations">14世代</a>
+    <a href="#philosophy">哲学</a>
+    <a href="#pricing">料金</a>
+    <a href="#" class="cta">無料で始める</a>
+  </nav>
 </div>
 
-<!-- VIDEO HEADER -->
-<div class="video-header">
-  <video autoplay muted loop playsinline poster="">
-    <source src="https://cdn.pixabay.com/vimeo/895156634/waves-216277.mp4?width=1280&hash=40c6cf46622e2662aa25735697cb5d31d7c99c5f" type="video/mp4">
-  </video>
-  <div class="video-overlay"></div>
-  <div class="video-content">
-    <div class="badge">● AI自動応答</div>
-    <h1>サポートが<br><span>眠らない</span></h1>
-    <p>AIが24時間リアルタイムで自動応答。お客様の年代に合わせた自然な応対で、あなたのビジネスを支えます。</p>
-    <div class="ctas">
-      <button class="btn btn-primary">無料で始める →</button>
-      <button class="btn btn-secondary">デモを見る</button>
+<!-- Hero -->
+<div class="hero">
+  <div class="tag">● AI自動応対 — Level 5</div>
+  <div class="h-wrap">
+    <div class="left">
+      <h1>「正確さ」より<br>「違和感のなさ」<br>を<em>設計基準</em>に</h1>
+      <p>AIを知らないオフライン店舗のお客様が、違和感なく使えるデジタル従業員。世代別の話し方で、誰もが抵抗なく話しかけられます。</p>
+      <div class="btns">
+        <a href="#" class="btn-primary">無料で始める</a>
+        <a href="#diff" class="btn-ghost">詳しく見る</a>
+      </div>
     </div>
-  </div>
-
-  <!-- CHAT BUBBLE -->
-  <div class="chat-bubble" id="chatBubble">
-    <div class="preview" id="chatPreview">
-      <div class="label">自動応答</div>
-      <span>こんにちは！メッセージをどうぞ。</span>
-    </div>
-    <button class="btn-chat" id="chatToggle" onclick="toggleChat()">💬</button>
-  </div>
-</div>
-
-<!-- CHAT MODAL -->
-<div class="chat-modal" id="chatModal">
-  <div class="bar">
-    <span class="title">ライブチャット</span>
-    <span class="status">オンライン</span>
-    <button class="close" onclick="toggleChat()">✕</button>
-  </div>
-  <div class="ch-body" id="chatBody">
-    <div class="m b">
-      <div class="a" style="background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.5);font-size:9px">R</div>
-      <div class="b"><div class="l">自動応答</div>こんにちは！メッセージをどうぞ。</div>
-    </div>
-  </div>
-  <div class="typing" id="chatTyping">respondが入力中...</div>
-  <div class="ch-foot">
-    <input type="text" id="chatInput" placeholder="メッセージを書いてください..." onkeydown="if(event.key==='Enter')sendChat()">
-    <button class="cs" onclick="sendChat()" aria-label="送信">
-      <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-    </button>
-  </div>
-</div>
-
-<!-- SERVICE CARDS -->
-<div class="section">
-  <div class="section-label">SERVICES</div>
-  <h2>料金プラン</h2>
-  <p class="desc">お客様のビジネス規模に合わせて選べる3つのプラン。すべてのプランに14世代対応のAI応対が含まれています。</p>
-  
-  <div class="card-grid">
-    <div class="service-card" onmousemove="this.style.setProperty('--mx',(event.offsetX)+'px');this.style.setProperty('--my',(event.offsetY)+'px')">
-      <div class="icon">🚀</div>
-      <h3>スターター</h3>
-      <p>小規模店舗向け。月間500件までのAI応対。Webサイト埋め込み対応。</p>
-      <div class="price">¥15,000 / 月 →</div>
-    </div>
-    <div class="service-card" onmousemove="this.style.setProperty('--mx',(event.offsetX)+'px');this.style.setProperty('--my',(event.offsetY)+'px')">
-      <div class="icon">🏪</div>
-      <h3>ビジネス</h3>
-      <p>中規模店舗向け。月間2,000件対応＋LINE連携＋分析ダッシュボード。</p>
-      <div class="price">¥50,000 / 月 →</div>
-    </div>
-    <div class="service-card" onmousemove="this.style.setProperty('--mx',(event.offsetX)+'px');this.style.setProperty('--my',(event.offsetY)+'px')">
-      <div class="icon">🏢</div>
-      <h3>エンタープライズ</h3>
-      <p>無制限対応＋マルチチャネル＋専任サポート＋カスタムトレーニング。</p>
-      <div class="price">お問い合わせ →</div>
+    <div class="right">
+      <div class="chat-widget">
+        <div class="bar">
+          <span class="title">ライブチャット</span>
+          <span class="status">応答待機中</span>
+        </div>
+        <div class="ch-body" id="heroChatBody">
+          <div class="m b">
+            <div class="a" style="background:#1c1c1c">R</div>
+            <div class="b"><div class="l">自動応対</div>こんにちは！何かお困りですか？お気軽にどうぞ。<div class="t">今すぐ · 自動</div></div>
+          </div>
+        </div>
+        <div class="typing" id="heroTyping">Rが入力中...</div>
+        <div class="ch-foot">
+          <input type="text" id="heroChatInput" placeholder="メッセージを書いてください..." onkeydown="if(event.key==='Enter')sendHeroChat()">
+          <button class="cs" onclick="sendHeroChat()" aria-label="送信">
+            <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- FEATURES -->
-<div class="section">
-  <div class="section-label">FEATURES</div>
-  <h2>必要な機能だけ</h2>
-  <p class="desc">複雑なことはAIがやります。あなたはビジネスに集中してください。</p>
-  <div class="mod-grid">
-    <div class="mod-item"><h3>24時間自動応答</h3><p>お客様の質問をリアルタイムに理解し、自然に応答します。</p></div>
-    <div class="mod-item"><h3>マルチチャンネル</h3><p>Discord、LINE、Web、Slackを一元管理。</p></div>
-    <div class="mod-item"><h3>分析ダッシュボード</h3><p>応答率、満足度、よくある質問をひと目で確認。</p></div>
-    <div class="mod-item"><h3>テンプレート</h3><p>よく使う応答を保存してワンクリックで利用。</p></div>
-    <div class="mod-item"><h3>顧客履歴</h3><p>タグ、メモ、問い合わせ履歴をまとめて管理。</p></div>
-    <div class="mod-item"><h3>高速応答</h3><p>平均応答時間0.4秒。お客様を待たせません。</p></div>
+<!-- 5 Differences -->
+<div class="section" id="diff">
+  <div class="label">Why respond</div>
+  <h2>既存のチャットボットとの<em>5つの決定的な違い</em></h2>
+  <p class="sub">「FAQ一致率」ではなく「お客様が違和感を覚えないか」を設計基準としています。</p>
+  <div class="diff-grid">
+    <div class="diff-item"><div class="ic">🎯</div><h3>違和感の排除</h3><p>「正確さ」ではなく「話しかけられた側がどう感じるか」で設計。心理学・メディア研究論文ベース。</p></div>
+    <div class="diff-item"><div class="ic">👥</div><h3>14世代対応</h3><p>20代前半〜80代後半まで、それぞれに最適化された話法。年齢層を推定し話し方を自動調整。</p></div>
+    <div class="diff-item"><div class="ic">💬</div><h3>100%敬語・標準語</h3><p>東京標準語・敬語固定。方言やタメ口なし。ボットのペルソナは変えず、語彙・丁寧さ・文体のみ変化。</p></div>
+    <div class="diff-item"><div class="ic">⚡</div><h3>質問→即答</h3><p>カテゴリ選択不要。お客様は質問を打つだけで応答が返ってくる。導線のストレスゼロ。</p></div>
+    <div class="diff-item"><div class="ic">🔬</div><h3>言語学×心理学ベース</h3><p>学術論文＋日本語自然会話コーパス（CEJC）から抽出した実データに基づく応答設計。</p></div>
+    <div class="diff-item"><div class="ic">🏪</div><h3>オフライン店舗向け</h3><p>AIに詳しくない一般のお客様が、実店舗で違和感なく使えるデジタル従業員を目指す。</p></div>
   </div>
 </div>
 
-<!-- HOW IT WORKS -->
-<div class="section">
-  <div class="section-label">HOW IT WORKS</div>
-  <h2>3ステップで完了</h2>
-  <div class="steps">
-    <div class="step">
+<!-- 14 Generations -->
+<div class="section" id="generations">
+  <div class="label">Generational speech</div>
+  <h2><em>14世代</em>それぞれに最適化された話法</h2>
+  <div class="gen-intro">
+    <p>お客様の話し方・年齢層から世代を推定し、それに合わせた語彙・敬語レベル・文体で応答します。ボットは常に同じ丁寧さを維持。変化するのは語彙・敬語レベル・文体のみです。</p>
+  </div>
+  <div class="gen-grid">
+    <div class="gen-card"><div class="gen-age">20代前半</div><div class="gen-desc">です・ます調、カタカナ語OK、短文、明るく元気</div></div>
+    <div class="gen-card"><div class="gen-age">20代後半</div><div class="gen-desc">ビジネス敬語、カタカナ語自然に、テキパキ</div></div>
+    <div class="gen-card"><div class="gen-age">30代前半</div><div class="gen-desc">敬語に最も敏感、させていただきます多用、丁寧で誠実</div></div>
+    <div class="gen-card"><div class="gen-age">30代後半</div><div class="gen-desc">尊敬語・謙譲語正確、落ち着き、具体的な説明</div></div>
+    <div class="gen-card"><div class="gen-age">40代前半</div><div class="gen-desc">でございます・でいらっしゃいますか、カタカナ語最小限</div></div>
+    <div class="gen-card"><div class="gen-age">40代後半</div><div class="gen-desc">格式高め、に関しまして・の件ですが自然に</div></div>
+    <div class="gen-card"><div class="gen-age">50代前半</div><div class="gen-desc">品格ある敬語、古風な丁寧表現、冗談なし</div></div>
+    <div class="gen-card"><div class="gen-age">50代後半</div><div class="gen-desc">誠に恐れ入りますが自然に、謙虚で控えめ</div></div>
+    <div class="gen-card"><div class="gen-age">60代前半</div><div class="gen-desc">女性＝ですわ・ますわよ／男性＝でございますな、温かみ</div></div>
+    <div class="gen-card"><div class="gen-age">60代後半</div><div class="gen-desc">女性＝わ・わね頻度高／男性＝であったと思いますが、穏やか</div></div>
+    <div class="gen-card"><div class="gen-age">70代前半</div><div class="gen-desc">女性＝ますの・ますのよ／男性＝でございますな、新外来語NG</div></div>
+    <div class="gen-card"><div class="gen-age">70代後半</div><div class="gen-desc">昔の言い回し、カタカナ語NG、確認繰り返しあり</div></div>
+    <div class="gen-card"><div class="gen-age">80代前半</div><div class="gen-desc">戦前教育の影響、漢語調、でございますね多い</div></div>
+    <div class="gen-card"><div class="gen-age">80代後半</div><div class="gen-desc">明治〜大正語ベース、文語調、にございます・あそばせ</div></div>
+  </div>
+</div>
+
+<!-- Philosophy -->
+<div class="section" id="philosophy">
+  <div class="label">Philosophy</div>
+  <h2>3つの<em>核心哲学</em></h2>
+  <div class="phil">
+    <div class="phil-item">
       <div class="num">01</div>
-      <h3>接続</h3>
-      <p>Discord、LINE、Webサイトなど好みのチャンネルを接続。</p>
+      <h3>「話しかけられた側がどう感じるか」で設計する</h3>
+      <p>既存のチャットボットは正確な回答を目標とします。respondはお客様がその話し方を聞いてどう感じるかを基準に設計。言語学（世代別話法）×心理学（受容心理）×メディア研究（違和感要因）の交差点から。</p>
     </div>
-    <div class="step">
+    <div class="phil-item">
       <div class="num">02</div>
-      <h3>設定</h3>
-      <p>テンプレートを登録するか、AIにお任せください。</p>
+      <h3>AIらしさを出さない</h3>
+      <p>パープルのグラデーション、グラスモーフィズム、ベントグリッドは一切排除。「AIがお答えします」のような文言も使いません。チャットボットであることを隠すのではなく、意識させないことを目指します。</p>
     </div>
-    <div class="step">
+    <div class="phil-item">
       <div class="num">03</div>
-      <h3>開始</h3>
-      <p>数分で稼働開始。結果はダッシュボードで確認。</p>
+      <h3>ボットのペルソナは固定。話し方はお客様基準で変化</h3>
+      <p>「あなたは○○歳の店員です」ではなく「あなたは○○歳のお客様と話しています」。ボットは常に同じ丁寧さを維持し、変化するのは語彙・敬語レベル・文体のみです。</p>
     </div>
   </div>
 </div>
 
-<!-- PLATFORMS -->
+<!-- Market comparison -->
 <div class="section">
-  <div class="section-label">PLATFORMS</div>
-  <h2>対応プラットフォーム</h2>
-  <div class="int-grid">
-    <div class="int-chip">Discord</div>
-    <div class="int-chip">LINE</div>
-    <div class="int-chip">Web</div>
-    <div class="int-chip">Slack</div>
-    <div class="int-chip">メール</div>
-    <div class="int-chip">Telegram</div>
+  <div class="label">Market position</div>
+  <h2>まったく新しい<em>Level 5</em>のカテゴリ</h2>
+  <p class="sub">国内AIチャットボット120サービス以上を分析。既存サービスにない価値を提供します。</p>
+  <table class="comp-table">
+    <tr>
+      <th>比較軸</th>
+      <th>既存サービス</th>
+      <th>respond</th>
+    </tr>
+    <tr>
+      <td>核心価値</td>
+      <td>正確度・効率性・コスト削減</td>
+      <td class="highlight">違和感の排除・自然さ</td>
+    </tr>
+    <tr>
+      <td>応答設計</td>
+      <td>FAQベース（文書検索）</td>
+      <td class="highlight">世代別トーン＋心理学ベース</td>
+    </tr>
+    <tr>
+      <td>ユーザー導線</td>
+      <td>質問→カテゴリ選択→回答</td>
+      <td class="highlight">質問→即答</td>
+    </tr>
+    <tr>
+      <td>対象顧客</td>
+      <td>AI／IT担当者</td>
+      <td class="highlight">AIを知らないオフライン一般客</td>
+    </tr>
+    <tr>
+      <td>データ基盤</td>
+      <td>FAQログ</td>
+      <td class="highlight">論文＋世代別話し言葉コーパス</td>
+    </tr>
+  </table>
+</div>
+
+<!-- Pricing -->
+<div class="section" id="pricing">
+  <div class="label">Pricing</div>
+  <h2>シンプルな<em>料金体系</em></h2>
+  <p class="sub">初期費用と月額利用料のみ。クオリティ不足は値引きではなく、さらに高いプレミアムで。</p>
+  <div class="price-wrap">
+    <div class="price-card">
+      <div class="price-label">初期制作</div>
+      <div class="price-amount">150,000<small>円</small></div>
+      <p>税別。初回のみ。14世代対応のAI応対システムを構築・設定。</p>
+    </div>
+    <div class="price-card featured">
+      <div class="price-label">月額利用料</div>
+      <div class="price-amount">50,000<small>円</small></div>
+      <p>税別。サーバー運用・API利用・アップデート込。月単位で解約可能。</p>
+    </div>
+    <div class="price-card">
+      <div class="price-label">プレミアム</div>
+      <div class="price-amount">500,000<small>円〜</small></div>
+      <p>税別。業種別カスタマイズ・分析ダッシュボード・優先サポート含む。</p>
+    </div>
   </div>
 </div>
 
 <!-- CTA -->
-<div class="cta-wrap">
+<div class="section cta-wrap">
   <div class="cta-box">
-    <h2>今すぐ始めましょう</h2>
-    <p>14日間無料トライアル。クレジットカード不要。いつでも解約可能。</p>
-    <a href="#" class="btn-cta">無料で始める →</a>
-    <div class="small">5分で設定完了 · インストール不要</div>
+    <h2>お問い合わせはこちら</h2>
+    <p>デモのご依頼、導入のご相談、その他お問い合わせはお気軽にどうぞ。</p>
+    <a href="#" class="btn">無料相談を予約する</a>
+    <div class="small">オンライン面談可 · 30分で概要説明</div>
   </div>
 </div>
 
-<!-- FOOTER -->
+<!-- Footer -->
 <div class="footer">
   <div class="l">
-    <a href="#">機能</a>
-    <a href="#">导入手順</a>
-    <a href="#">料金</a>
+    <a href="#diff">違い</a>
+    <a href="#generations">14世代</a>
+    <a href="#philosophy">哲学</a>
+    <a href="#pricing">料金</a>
     <a href="#">お問い合わせ</a>
   </div>
   <div>© 2026 respond</div>
 </div>
 
 <script>
-// ─── Chat ───
-function toggleChat(){
-  var m=document.getElementById('chatModal');
-  var b=document.getElementById('chatBubble');
-  var p=document.getElementById('chatPreview');
-  m.classList.toggle('open');
-  if(m.classList.contains('open')){
-    b.style.display='none';
-    document.getElementById('chatInput').focus();
-  } else {
-    b.style.display='flex';
-    p.classList.remove('show');
-    setTimeout(function(){p.classList.add('show')},100);
-  }
+var SESSION_ID = localStorage.getItem('respond_sid');
+if (!SESSION_ID) {
+  SESSION_ID = 'web_' + Date.now() + '_' + Math.random().toString(36).slice(2, 9);
+  localStorage.setItem('respond_sid', SESSION_ID);
 }
-
-// Show preview bubble on load
-setTimeout(function(){
-  document.getElementById('chatPreview').classList.add('show');
-},1500);
-
-function sendChat(){
-  var input=document.getElementById('chatInput');
-  var body=document.getElementById('chatBody');
-  var typing=document.getElementById('chatTyping');
+function sendHeroChat(){
+  var input=document.getElementById('heroChatInput');
+  var body=document.getElementById('heroChatBody');
+  var typing=document.getElementById('heroTyping');
   var text=input.value.trim();
   if(!text)return;
-  body.innerHTML+='<div class="m u"><div class="a" style="background:rgba(255,255,255,0.1);color:#fff;font-size:9px">U</div><div class="b">'+text.replace(/</g,'&lt;')+'<div class="t">今</div></div></div>';
+  body.innerHTML+='<div class="m u"><div class="a" style="background:#ff6b6b">私</div><div class="b">'+text.replace(/</g,'&lt;')+'<div class="t">今</div></div></div>';
   input.value='';
   body.scrollTop=body.scrollHeight;
   typing.classList.add('show');
@@ -520,19 +385,22 @@ function sendChat(){
     typing.classList.remove('show');
     try{
       var r=JSON.parse(xhr.responseText);
-      body.innerHTML+='<div class="m b"><div class="a" style="background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.5);font-size:9px">R</div><div class="b"><div class="l">自動応答</div>'+r.reply.replace(/</g,'&lt;')+'<div class="t">'+r.time+'</div></div></div>';
+      body.innerHTML+='<div class="m b"><div class="a" style="background:#1c1c1c">R</div><div class="b"><div class="l">自動応対</div>'+r.reply.replace(/</g,'&lt;')+'<div class="t">'+r.time+' · 自動</div></div></div>';
     }catch(e){
-      body.innerHTML+='<div class="m b"><div class="a" style="background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.5);font-size:9px">R</div><div class="b"><div class="l">自動応答</div>申し訳ございません。エラーが発生しました。<div class="t">error</div></div></div>';
+      body.innerHTML+='<div class="m b"><div class="a" style="background:#1c1c1c">R</div><div class="b"><div class="l">自動応対</div>申し訳ございません。応答に失敗しました。<div class="t">今 · エラー</div></div></div>';
     }
     body.scrollTop=body.scrollHeight;
   };
   xhr.onerror=function(){
     typing.classList.remove('show');
-    body.innerHTML+='<div class="m b"><div class="a" style="background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.5);font-size:9px">R</div><div class="b"><div class="l">自動応答</div>接続エラーです。しばらくしてからお試しください。<div class="t">error</div></div></div>';
+    body.innerHTML+='<div class="m b"><div class="a" style="background:#1c1c1c">R</div><div class="b"><div class="l">自動応対</div>接続エラーが発生しました。もう一度お試しください。<div class="t">今 · エラー</div></div></div>';
     body.scrollTop=body.scrollHeight;
   };
-  xhr.send(JSON.stringify({message:text}));
+  xhr.send(JSON.stringify({message:text, session_id:SESSION_ID}));
 }
+document.addEventListener('DOMContentLoaded',function(){
+  document.getElementById('heroChatInput').focus();
+});
 </script>
 </body>
 </html>
