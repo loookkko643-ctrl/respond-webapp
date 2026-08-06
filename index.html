@@ -495,6 +495,24 @@ function sendHeroChat(){
 var VOICE_ON = localStorage.getItem('respond_voice') !== 'off';
 var micSupported = !!(window.SpeechRecognition || window.webkitSpeechRecognition);
 
+/* 모바일 자동재생 정책 대응: 첫 사용자 조작 시 오디오 해금 */
+var _audioCtx = null;
+function unlockAudio(){
+  try{
+    if(!_audioCtx){ _audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }
+    if(_audioCtx && _audioCtx.state==='suspended'){ _audioCtx.resume(); }
+  }catch(e){}
+  try{
+    if('speechSynthesis' in window){
+      speechSynthesis.resume();
+      speechSynthesis.getVoices();
+    }
+  }catch(e){}
+}
+['touchstart','touchend','mousedown','click','keydown'].forEach(function(ev){
+  document.addEventListener(ev, unlockAudio, {passive:true, capture:true});
+});
+
 function pickJaVoice(){
   if(!('speechSynthesis' in window)) return null;
   var voices = speechSynthesis.getVoices();
@@ -514,6 +532,7 @@ function pickJaVoice(){
 
 function speakReply(text){
   if(!VOICE_ON || !('speechSynthesis' in window)) return;
+  unlockAudio();
   var clean=(text||'').replace(/<[^>]*>/g,'').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&').replace(/&quot;/g,'"').replace(/&#39;/g,"'");
   if(!clean.trim()) return;
   speechSynthesis.cancel();
@@ -521,6 +540,7 @@ function speakReply(text){
   u.lang='ja-JP';
   var v=pickJaVoice(); if(v) u.voice=v;
   u.rate=1.0; u.pitch=1.0; u.volume=1.0;
+  u.onerror=function(){}; u.onend=function(){};
   speechSynthesis.speak(u);
 }
 
@@ -529,6 +549,7 @@ function startMic(){
   var input=document.getElementById('heroChatInput');
   var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   if(!SR) return;
+  unlockAudio();
   var rec=new SR();
   rec.lang='ja-JP';
   rec.interimResults=false;
@@ -546,6 +567,7 @@ function startMic(){
 function toggleVoice(){
   VOICE_ON=!VOICE_ON;
   localStorage.setItem('respond_voice', VOICE_ON?'on':'off');
+  if(VOICE_ON) unlockAudio();
   var btn=document.getElementById('voiceToggle');
   if(btn){
     btn.classList.toggle('on',VOICE_ON);
@@ -556,6 +578,7 @@ function toggleVoice(){
 }
 document.addEventListener('DOMContentLoaded',function(){
   document.getElementById('heroChatInput').focus();
+  unlockAudio();
   var micBtn=document.getElementById('micBtn');
   if(micBtn){
     if(micSupported){ micBtn.style.display='flex'; micBtn.addEventListener('click',startMic); }
