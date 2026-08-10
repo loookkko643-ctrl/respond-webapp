@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIシステム構築ガイド — 月4,000円で会社を作る</title>
+<style>
+  :root {
+    --bg: #faf9f6;
+    --ink: #111111;
+    --muted: #6b6b6b;
+    --line: #e5e3dd;
+    --accent: #1a1a1a;
+    --accent-hover: #333333;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic", sans-serif;
+    line-height: 1.7;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+
+  /* ---------- Hero ---------- */
+  .hero { padding: 96px 0 72px; }
+  .hero .kicker {
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    color: var(--muted);
+    margin-bottom: 28px;
+    text-transform: uppercase;
+  }
+  .hero h1 {
+    font-family: "DM Serif Display", "Noto Serif JP", Georgia, serif;
+    font-size: clamp(34px, 8vw, 58px);
+    font-weight: 400;
+    line-height: 1.25;
+    letter-spacing: 0.01em;
+    margin-bottom: 24px;
+  }
+  .hero h1 em { font-style: italic; }
+  .hero .sub {
+    font-size: clamp(15px, 3.4vw, 18px);
+    color: var(--muted);
+    margin-bottom: 40px;
+    max-width: 520px;
+  }
+  .cta-row { display: flex; gap: 14px; flex-wrap: wrap; }
+  .btn {
+    display: inline-block;
+    padding: 15px 34px;
+    border-radius: 999px;
+    font-size: 15px;
+    text-decoration: none;
+    transition: background 0.15s ease;
+  }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { background: var(--accent-hover); }
+  .btn-ghost {
+    color: var(--ink);
+    border: 1px solid var(--line);
+    background: transparent;
+  }
+  .btn-ghost:hover { border-color: var(--ink); }
+
+  /* ---------- Comparison ---------- */
+  .section { padding: 72px 0; border-top: 1px solid var(--line); }
+  .section h2 {
+    font-family: "DM Serif Display", "Noto Serif JP", Georgia, serif;
+    font-size: clamp(26px, 5.5vw, 38px);
+    font-weight: 400;
+    margin-bottom: 12px;
+  }
+  .section .lead { color: var(--muted); margin-bottom: 40px; font-size: 15px; }
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .compare > div { padding: 28px 24px; }
+  .compare .them { background: #f3f1ec; }
+  .compare .us { background: #fff; }
+  .compare .label { font-size: 12px; letter-spacing: 0.12em; color: var(--muted); margin-bottom: 16px; }
+  .compare .price { font-family: "DM Serif Display", Georgia, serif; font-size: clamp(28px, 6vw, 40px); line-height: 1.2; }
+  .compare .price small { font-size: 14px; color: var(--muted); font-family: sans-serif; }
+  .compare ul { list-style: none; margin-top: 16px; }
+  .compare li {
+    font-size: 13.5px;
+    color: var(--muted);
+    padding-left: 18px;
+    position: relative;
+    margin-bottom: 8px;
+  }
+  .compare li::before { content: "—"; position: absolute; left: 0; color: var(--line); }
+  .compare .us li { color: var(--ink); }
+
+  /* ---------- Steps ---------- */
+  .steps { list-style: none; counter-reset: step; }
+  .steps li {
+    counter-increment: step;
+    padding: 28px 0;
+    border-top: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+  .steps li:last-child { border-bottom: 1px solid var(--line); }
+  .steps .num {
+    font-family: "DM Serif Display", Georgia, serif;
+    font-size: 22px;
+    color: var(--muted);
+    padding-top: 2px;
+  }
+  .steps h3 { font-size: 17px; font-weight: 600; margin-bottom: 6px; }
+  .steps p { font-size: 14.5px; color: var(--muted); }
+
+  /* ---------- Proof / facts ---------- */
+  .fact {
+    display: flex;
+    gap: 14px;
+    align-items: baseline;
+    padding: 18px 0;
+    border-top: 1px solid var(--line);
+  }
+  .fact .big {
+    font-family: "DM Serif Display", Georgia, serif;
+    font-size: 30px;
+    min-width: 150px;
+  }
+  .fact p { color: var(--muted); font-size: 14px; }
+
+  /* ---------- FAQ ---------- */
+  details {
+    border-top: 1px solid var(--line);
+    padding: 20px 0;
+  }
+  details:last-of-type { border-bottom: 1px solid var(--line); }
+  summary {
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  summary::after { content: "+"; font-size: 20px; color: var(--muted); }
+  details[open] summary::after { content: "−"; }
+  details p { margin-top: 14px; font-size: 14px; color: var(--muted); }
+
+  /* ---------- Final CTA ---------- */
+  .final { padding: 96px 0; text-align: center; }
+  .final h2 {
+    font-family: "DM Serif Display", "Noto Serif JP", Georgia, serif;
+    font-size: clamp(28px, 6vw, 42px);
+    font-weight: 400;
+    margin-bottom: 18px;
+  }
+  .final p { color: var(--muted); margin-bottom: 36px; max-width: 460px; margin-left: auto; margin-right: auto; }
+
+  footer { border-top: 1px solid var(--line); padding: 40px 0; text-align: center; color: var(--muted); font-size: 12.5px; }
+
+  @media (max-width: 480px) {
+    .compare { grid-template-columns: 1fr; }
+    .hero { padding: 72px 0 56px; }
+    .section { padding: 56px 0; }
+    .final { padding: 72px 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="wrap">
+    <div class="kicker">AIシステム構築ガイド</div>
+    <h1>月4,000円で<br>「AIが働く会社」を<em>作る方法</em></h1>
+    <p class="sub">実行・監査・修正・秘書。4つの役割を持つAI組織を、たった1つのガイドで。企業が数千万円かけて作る仕組みを、あなたは月4,000円で手に入れられる。</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="#guide">ガイドを見る</a>
+      <a class="btn btn-ghost" href="#faq">よくある質問</a>
+    </div>
+  </div>
+</section>
+
+<!-- Comparison -->
+<section class="section">
+  <div class="wrap">
+    <h2>同じシステム。価格だけが違う。</h2>
+    <p class="lead">AIエージェントを複数組み合わせて仕事をさせる「マルチエージェント」は、企業では当たり前に導入されています。ただし、その価格は —</p>
+    <div class="compare">
+      <div class="them">
+        <div class="label">企業のカスタム構築</div>
+        <div class="price">300万〜1,500万円<small> 初期</small></div>
+        <ul>
+          <li>月額30万〜100万円の運用費</li>
+          <li>開発に数ヶ月</li>
+          <li>導入成功率は約3割※</li>
+        </ul>
+      </div>
+      <div class="us">
+        <div class="label">このガイド</div>
+        <div class="price">4,000円<small> / 月</small></div>
+        <ul>
+          <li>初期費用ゼロ</li>
+          <li>最短1日で構築</li>
+          <li>実証済みの手順をそのまま再現</li>
+        </ul>
+      </div>
+    </div>
+    <p class="lead" style="margin-top:20px; font-size:12.5px;">※MIT調査による外部連携型（BUY型）の本番稼働率を参照</p>
+  </div>
+</section>
+
+<!-- Steps -->
+<section class="section">
+  <div class="wrap">
+    <h2>5つのステップで完成</h2>
+    <p class="lead">AIに「答えさせる」のではなく、「働かせる」ための構成。すべて実機で検証済みの手順です。</p>
+    <ol class="steps">
+      <li>
+        <span class="num">01</span>
+        <div>
+          <h3>実行エージェントを設置</h3>
+          <p>コード・文書・調査・自動化を任せるAIエージェントを1台のPCに構築。メッセンジャーから指示を送れる状態にします。</p>
+        </div>
+      </li>
+      <li>
+        <span class="num">02</span>
+        <div>
+          <h3>役割を分離する</h3>
+          <p>仕事用・個人用など、プロフィールを分けて役割を明確化。混線を防ぎ、それぞれに専任のAIを持たせます。</p>
+        </div>
+      </li>
+      <li>
+        <span class="num">03</span>
+        <div>
+          <h3>無料の監査役を付ける</h3>
+          <p>実行モデルと異なるAIに成果物を検証させます。「同じAIに自分で自分のチェックをさせない」— これが品質の要です。</p>
+        </div>
+      </li>
+      <li>
+        <span class="num">04</span>
+        <div>
+          <h3>繰り返し作業を自動化</h3>
+          <p>残高チェック・定期報告・投稿予約などをスケジュール実行。人がいなくても回る仕組みにします。</p>
+        </div>
+      </li>
+      <li>
+        <span class="num">05</span>
+        <div>
+          <h3>知識倉庫を作る</h3>
+          <p>判断基準・好み・過去のフィードバックを蓄積する知識ベースを構築。AIのアウトプットが毎回ブレません。</p>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- Facts -->
+<section class="section">
+  <div class="wrap">
+    <h2>なぜ4,000円でできるのか</h2>
+    <div class="fact"><span class="big">0円</span><p>監査役にはChatGPT無料プラン（Luna）を活用。無制限のテキスト検証を追加コストなしで実現。</p></div>
+    <div class="fact"><span class="big">0円</span><p>自動化・知識倉庫・連携ツールはすべて無料のものを組み合わせ。</p></div>
+    <div class="fact"><span class="big">1日</span><p>手順通りに進めれば、最短1日で最初の業務をAIに任せられます。</p></div>
+  </div>
+</section>
+
+<!-- Guide -->
+<section class="section" id="guide">
+  <div class="wrap">
+    <h2>ガイドの内容</h2>
+    <p class="lead">全5ステップを、コマンド例・設定ファイル・チェックリスト付きで収録。つまずきポイントも明記しています。</p>
+    <div class="fact"><span class="big">PDF</span><p>全40ページ超。オフラインでも読めるファイル形式でお届け。</p></div>
+    <div class="fact"><span class="big">更新</span><p>無料モデルの状況に合わせて定期更新。購入者は最新版を再ダウンロード可能。</p></div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section" id="faq">
+  <div class="wrap">
+    <h2>よくある質問</h2>
+    <details>
+      <summary>パソコンに詳しくないのですが大丈夫ですか？</summary>
+      <p>はい。コマンドのコピー＆ペーストで進められるよう、各ステップに具体例を掲載しています。不明点はサポートにもご相談いただけます。</p>
+    </details>
+    <details>
+      <summary>必要なものは何ですか？</summary>
+      <p>PC1台と、実行用AIのAPIキー（月約4,000円）、ChatGPT無料アカウント、メッセンジャーアカウントです。追加の高額な機材は不要です。</p>
+    </details>
+    <details>
+      <summary>ChatGPTの有料プランは必要ですか？</summary>
+      <p>不要です。監査役は無料プランで動きます。有料プランが必要になるケースはガイド内で明示しています。</p>
+    </details>
+    <details>
+      <summary>どのくらいの業務を任せられますか？</summary>
+      <p>文書作成・リサーチ・コード修正・データ整理・定期報告など、PC上でできる仕事の大半です。最初は1つの業務から始めることをおすすめします。</p>
+    </details>
+  </div>
+</section>
+
+<!-- Final CTA -->
+<section class="final">
+  <div class="wrap">
+    <h2>月4,000円のAI従業員、<br>今日から始める。</h2>
+    <p>企業が数千万円かけて失敗する前に。あなたは4,000円で、確実に動く仕組みを手に入れてください。</p>
+    <a class="btn btn-primary" href="#guide">ガイドを購入する</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">AIシステム構築ガイド © 2026</div>
+</footer>
+
+</body>
+</html>

@@ -214,6 +214,45 @@ a{color:inherit}
 .footer .l a:hover{color:var(--ink)}
 .footer .foot-hanko{width:16px;height:16px}
 .footer .copyright{font-family:'Inter',sans-serif;font-size:11px}
+/* ===== Guide banner (hero) ===== */
+.guide-banner{
+  display:inline-flex;align-items:center;gap:10px;
+  border:1px solid var(--line);border-left:3px solid var(--shu);
+  border-radius:var(--radius);
+  background:var(--card);
+  padding:11px 16px;
+  margin-top:26px;
+  font-size:12.5px;color:var(--ink);
+  text-decoration:none;
+  transition:border-color 0.2s,background 0.2s;
+}
+.guide-banner:hover{border-color:var(--shu);background:var(--shu-wash)}
+.guide-banner .gb-tag{
+  font-size:10px;font-weight:700;letter-spacing:0.12em;
+  color:var(--paper);background:var(--shu);
+  padding:3px 9px;border-radius:2px;white-space:nowrap;
+  font-family:'Inter',sans-serif;
+}
+.guide-banner .gb-t{line-height:1.5}
+
+/* ===== Guide product card (pricing) ===== */
+.price-card.guide-card{
+  background:var(--paper-deep);
+  border:1px solid var(--shu);
+  border-top:3px solid var(--shu);
+}
+.price-card.guide-card .price-label{color:var(--shu)}
+.price-card.guide-card .price-amount{font-size:24px;line-height:1.3}
+.price-card.guide-card .btn-guide{
+  display:inline-block;margin-top:14px;
+  background:var(--shu);color:#fff;
+  padding:8px 20px;border-radius:var(--radius);
+  font-size:12px;font-weight:700;text-decoration:none;
+  font-family:'Inter',sans-serif;
+  transition:background 0.2s;
+}
+.price-card.guide-card .btn-guide:hover{background:var(--shu-deep)}
+
 </style>
 </head>
 <body>
@@ -254,6 +293,10 @@ a{color:inherit}
           <a href="#" class="btn-primary">無料で始める</a>
           <a href="#diff" class="btn-ghost">詳しく見る</a>
         </div>
+        <a class="guide-banner" href="guide_landing.html">
+          <span class="gb-tag">新商品</span>
+          <span class="gb-t">AIシステム構築ガイド — 月4,000円でAIが働く会社を作る方法 →</span>
+        </a>
       </div>
     </div>
     <div class="right">
@@ -399,6 +442,12 @@ a{color:inherit}
       <div class="price-label">プレミアム</div>
       <div class="price-amount">500,000<small>円〜</small></div>
       <p>税別。業種別カスタマイズ・分析ダッシュボード・優先サポート含む。</p>
+    </div>
+    <div class="price-card guide-card">
+      <div class="price-label">新商品 ・ AIシステム構築ガイド</div>
+      <div class="price-amount">4,000<small>円/月〜</small></div>
+      <p>実行・監査・修正・秘書 — 4つの役割を持つAI組織の作り方。企業が数千万円かける仕組みを最短1日で。</p>
+      <a class="btn-guide" href="guide_landing.html">詳しく見る →</a>
     </div>
   </div>
 </div>

@@ -125,6 +125,38 @@ respondは「年齢別応対」「違和感の排除」「質問→即答」を�
 4. オーナー以外のお客様が「사장」という語を知っていても、同じ扱いになる（秘密の合言葉として機能）。
 '''
 
+# ── 구축 가이드 지식 (Obsidian vault → repo fallback) ──
+def _load_guide():
+    candidates = []
+    up = os.environ.get('USERPROFILE', '')
+    if up:
+        candidates.append(os.path.join(up, 'OneDrive', 'ドキュメント', 'Obsidian Vault', 'AI-시스템-구축-가이드.md'))
+    candidates.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'guide_content.md'))
+    for p in candidates:
+        try:
+            if os.path.isfile(p):
+                with open(p, encoding='utf-8') as f:
+                    return f.read().strip()
+        except Exception:
+            continue
+    return None
+
+GUIDE_TEXT = _load_guide()
+GUIDE_KEYWORDS = ['構築ガイド', '構築', 'ガイド', '導入方法', '導入', 'エージェント', 'AIシステム', 'セットアップ', '月4,000円', '月4000円', '구축', '가이드']
+
+GUIDE_PROMPT = '''【構築ガイド案内モード】
+お客様がAIシステム構築ガイドに関する質問（構築方法・導入・エージェント・月額費用など）をされた場合は、以下のガイド内容に基づいて案内してください。
+- ガイドの内容・構成・費用の仕組み（月4,000円でAI組織を作る方法）は案内できる
+- 具体的な販売価格・購入・決済方法はまだ準備中なので「詳しくはお問い合わせください」と案内する
+- ガイドの説明は簡潔に、2〜4文でまとめる
+【ガイド本文】
+''' + (GUIDE_TEXT or '（ガイド内容は現在準備中です）')
+
+def build_system_prompt(user_msg):
+    if GUIDE_TEXT and any(k in user_msg for k in GUIDE_KEYWORDS):
+        return SYSTEM_PROMPT + '\n\n' + GUIDE_PROMPT
+    return SYSTEM_PROMPT
+
 def call_llm(system_prompt, messages):
     """DeepSeek API 호출 — 전체 대화 맥락 전달"""
     payload = json.dumps({
@@ -217,7 +249,12 @@ class Handler(BaseHTTPRequestHandler):
                     SESSION_HISTORY[sid] = SESSION_HISTORY[sid][2:]
                 
                 # LLM 호출 (전체 대화 맥락 전달)
-                reply = call_llm(SYSTEM_PROMPT, SESSION_HISTORY[sid])
+                last_user = ''
+                for m in reversed(SESSION_HISTORY[sid]):
+                    if m['role'] == 'user':
+                        last_user = m['content']
+                        break
+                reply = call_llm(build_system_prompt(last_user), SESSION_HISTORY[sid])
                 
                 # 응답이 비었을 때만 fallback
                 if not reply:
