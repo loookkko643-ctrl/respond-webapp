@@ -259,10 +259,11 @@ a{color:inherit}
 .price-card.guide-card .btn-guide:hover{background:var(--shu-deep)}
 
 /* ===== Site-wide 3D ink-cloud & section bg type ===== */
-#hero3d{position:fixed;inset:0;z-index:9999;pointer-events:none;animation:heroFade 1.5s ease-out 0.5s both}
 .header,.hero,.section,.cta-wrap,.footer{position:relative;z-index:1}
 .hero .h-wrap{position:relative;z-index:2}
-.sec-bg{position:absolute;z-index:1;top:50%;right:-1%;transform:translateY(-50%);font-family:'Zen Old Mincho',serif;font-size:clamp(110px,16vw,260px);font-weight:700;color:var(--ink);opacity:0.045;letter-spacing:0.02em;white-space:nowrap;pointer-events:none;user-select:none;line-height:1}
+.sec-3d{position:absolute;inset:0;z-index:0;pointer-events:none}
+.sec-3d canvas{display:block}
+.sec-bg{position:absolute;z-index:0;top:50%;right:-1%;transform:translateY(-50%);font-family:'Zen Old Mincho',serif;font-size:clamp(110px,16vw,260px);font-weight:700;color:var(--ink);opacity:0.045;letter-spacing:0.02em;white-space:nowrap;pointer-events:none;user-select:none;line-height:1}
 .sec-bg.light{color:var(--paper);opacity:0.05}
 @media(max-width:720px){.sec-bg{font-size:clamp(80px,24vw,140px)}}
 .bg-type{position:absolute;z-index:0;top:50%;left:50%;transform:translate(-50%,-52%);font-family:'Zen Old Mincho',serif;font-size:clamp(160px,28vw,440px);font-weight:700;color:var(--ink);opacity:0.05;letter-spacing:0.02em;white-space:nowrap;pointer-events:none;user-select:none;line-height:1}
@@ -292,7 +293,6 @@ a{color:inherit}
     <feMerge><feMergeNode in="SourceGraphic"/><feMergeNode in="grain"/></feMerge>
   </filter>
 </svg>
-<div id="hero3d" aria-hidden="true"></div>
 <!-- Header -->
 <div class="header">
   <div class="brand">
@@ -311,6 +311,7 @@ a{color:inherit}
 <!-- Hero -->
 <div class="hero">
   <div class="bg-type" aria-hidden="true">違和感</div>
+  <div id="hero3d" class="sec-3d" aria-hidden="true"></div>
   <div class="h-wrap">
     <div class="left">
       <div class="tategaki">正確さより、違和感のなさ</div>
@@ -361,6 +362,7 @@ a{color:inherit}
 <!-- 5 Differences -->
 <div class="section" id="diff">
   <div class="sec-bg" aria-hidden="true">違い</div>
+  <div class="sec-3d" aria-hidden="true"></div>
   <div class="sec-head">
     <div class="tategaki">なぜ respond か</div>
     <div class="tategaki horiz-fallback">なぜ respond か</div>
@@ -382,6 +384,7 @@ a{color:inherit}
 <!-- 14 Generations — route line -->
 <div class="section" id="generations">
   <div class="sec-bg" aria-hidden="true">世代</div>
+  <div class="sec-3d" aria-hidden="true"></div>
   <div class="sec-head">
     <div class="tategaki">世代という路線図</div>
     <div class="tategaki horiz-fallback">世代という路線図</div>
@@ -400,6 +403,7 @@ a{color:inherit}
 <!-- Philosophy -->
 <div class="section" id="philosophy">
   <div class="sec-bg" aria-hidden="true">心技体</div>
+  <div class="sec-3d" aria-hidden="true"></div>
   <div class="sec-head">
     <div class="tategaki">核心の哲学</div>
     <div class="tategaki horiz-fallback">核心の哲学</div>
@@ -430,8 +434,9 @@ a{color:inherit}
 </div>
 
 <!-- Market comparison -->
-<div class="section">
+<div class="section" id="market">
   <div class="sec-bg" aria-hidden="true">市場</div>
+  <div class="sec-3d" aria-hidden="true"></div>
   <div class="sec-head">
     <div class="tategaki">市場における位置</div>
     <div class="tategaki horiz-fallback">市場における位置</div>
@@ -453,6 +458,7 @@ a{color:inherit}
 <!-- Pricing -->
 <div class="section" id="pricing">
   <div class="sec-bg" aria-hidden="true">料金</div>
+  <div class="sec-3d" aria-hidden="true"></div>
   <div class="sec-head">
     <div class="tategaki">料金体系</div>
     <div class="tategaki horiz-fallback">料金体系</div>
@@ -490,6 +496,7 @@ a{color:inherit}
 <div class="cta-wrap">
   <div class="cta-box">
     <div class="sec-bg light" aria-hidden="true">応</div>
+    <div class="sec-3d" aria-hidden="true"></div>
     <div class="hanko"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="#F7F3EA" filter="url(#inkGrain)"/><text x="20" y="27" text-anchor="middle" font-family="Zen Old Mincho, serif" font-size="20" fill="#AC3B26">応</text></svg></div>
     <h2>お問い合わせはこちら</h2>
     <p>デモのご依頼、導入のご相談、その他お問い合わせはお気軽にどうぞ。</p>
@@ -682,27 +689,14 @@ document.addEventListener('DOMContentLoaded',function(){
   }
 });
 
-/* ---- hero 3D ink-cloud particles ---- */
+
+/* ---- section 3D ink-cloud particles ---- */
 document.addEventListener('DOMContentLoaded', function(){
 (function(){
-  var container = document.getElementById('hero3d');
-  if(!container || typeof THREE === 'undefined') return;
+  if(typeof THREE === 'undefined') return;
   var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var isMobile = window.matchMedia && window.matchMedia('(max-width:720px)').matches;
   var isFine = window.matchMedia && window.matchMedia('(pointer:fine)').matches;
-  var COUNT = isMobile ? 420 : 1100;
-  var RADIUS = isMobile ? 1.9 : 2.4;
-
-  var w = container.clientWidth || window.innerWidth;
-  var h = container.clientHeight || window.innerHeight;
-  var scene = new THREE.Scene();
-  var camera = new THREE.PerspectiveCamera(45, w/h, 0.1, 100);
-  camera.position.set(0, 0, 8);
-
-  var renderer = new THREE.WebGLRenderer({alpha:true, antialias:!isMobile});
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio||1, isMobile?1.5:2));
-  renderer.setSize(w, h);
-  container.appendChild(renderer.domElement);
 
   function dotTexture(){
     var c = document.createElement('canvas'); c.width = c.height = 64;
@@ -714,12 +708,11 @@ document.addEventListener('DOMContentLoaded', function(){
     x.fillStyle = g; x.fillRect(0,0,64,64);
     return new THREE.CanvasTexture(c);
   }
-
-  function cloud(n){
+  function cloud(n, radius){
     var arr = new Float32Array(n*3);
     for(var i=0;i<n;i++){
       var u = Math.random()+Math.random()+Math.random();
-      var rr = (u/3) * RADIUS;
+      var rr = (u/3) * radius;
       var th = Math.random()*Math.PI*2;
       var ph = Math.acos(2*Math.random()-1);
       arr[i*3]   = rr*Math.sin(ph)*Math.cos(th);
@@ -729,29 +722,65 @@ document.addEventListener('DOMContentLoaded', function(){
     return arr;
   }
 
-  var tex = dotTexture();
-  var group = new THREE.Group();
-  var inkN = Math.floor(COUNT*0.82);
-  var ink = new THREE.Points(
-    new THREE.BufferGeometry(),
-    new THREE.PointsMaterial({color:0x201C17, size:isMobile?0.075:0.06, map:tex, transparent:true, opacity:0.25, depthWrite:false})
-  );
-  ink.geometry.setAttribute('position', new THREE.BufferAttribute(cloud(inkN),3));
-  group.add(ink);
+  var scenes = [];
+  function makeScene(container, opt){
+    var w = container.clientWidth, h = container.clientHeight;
+    if(w < 10 || h < 10) return null;
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(45, w/h, 0.1, 100);
+    camera.position.set(0, 0, 8);
+    var renderer = new THREE.WebGLRenderer({alpha:true, antialias:!isMobile});
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio||1, isMobile?1.5:2));
+    renderer.setSize(w, h);
+    container.appendChild(renderer.domElement);
 
-  var accN = COUNT - inkN;
-  var acc = new THREE.Points(
-    new THREE.BufferGeometry(),
-    new THREE.PointsMaterial({color:0xAC3B26, size:isMobile?0.095:0.075, map:tex, transparent:true, opacity:0.3, depthWrite:false})
-  );
-  acc.geometry.setAttribute('position', new THREE.BufferAttribute(cloud(accN),3));
-  group.add(acc);
+    var tex = dotTexture();
+    var group = new THREE.Group();
+    var count = opt.count, radius = opt.radius;
+    var inkN = Math.floor(count*0.82);
+    var ink = new THREE.Points(
+      new THREE.BufferGeometry(),
+      new THREE.PointsMaterial({color:opt.inkColor||0x201C17, size:opt.size||(isMobile?0.07:0.055), map:tex, transparent:true, opacity:opt.inkOp!=null?opt.inkOp:0.3, depthWrite:false})
+    );
+    ink.geometry.setAttribute('position', new THREE.BufferAttribute(cloud(inkN, radius),3));
+    group.add(ink);
+    var acc = new THREE.Points(
+      new THREE.BufferGeometry(),
+      new THREE.PointsMaterial({color:0xAC3B26, size:opt.accSize||(isMobile?0.09:0.07), map:tex, transparent:true, opacity:opt.accOp!=null?opt.accOp:0.38, depthWrite:false})
+    );
+    acc.geometry.setAttribute('position', new THREE.BufferAttribute(cloud(count-inkN, radius),3));
+    group.add(acc);
+    group.position.x = opt.x != null ? opt.x : 0;
+    group.position.y = opt.y != null ? opt.y : 0;
+    scene.add(group);
+    var s = {container:container, scene:scene, camera:camera, renderer:renderer, group:group, curX:0, curY:0, running:false};
+    scenes.push(s);
+    return s;
+  }
 
-  group.position.x = -0.6;
-  group.position.y = 0.2;
-  scene.add(group);
+  // Hero
+  var heroC = document.getElementById('hero3d');
+  if(heroC) makeScene(heroC, {count:isMobile?420:1100, radius:isMobile?1.9:2.4, x:-0.8, y:0.2});
 
-  var targetX = 0, targetY = 0, curX = 0, curY = 0, rot = 0;
+  // Sections — each with its own ink cloud
+  var secOpts = {
+    diff:        {count:isMobile?240:560, radius:isMobile?1.7:2.1, x:-1.3, y:0.1},
+    generations: {count:isMobile?260:640, radius:isMobile?1.9:2.5, x:0.5, y:0},
+    philosophy:  {count:isMobile?240:560, radius:isMobile?1.7:2.1, x:-1.3, y:0.1},
+    market:      {count:isMobile?200:460, radius:isMobile?1.5:1.8, x:-1.1, y:0},
+    pricing:     {count:isMobile?220:520, radius:isMobile?1.6:2.0, x:-1.2, y:0},
+    cta:         {count:isMobile?130:320, radius:isMobile?1.3:1.7, x:0, y:0, inkColor:0xF7F3EA, inkOp:0.15, accOp:0.22}
+  };
+  var secEls = document.querySelectorAll('.sec-3d');
+  for(var i=0;i<secEls.length;i++){
+    var el = secEls[i];
+    var host = el.parentElement;
+    var key = host.id || (host.className.indexOf('cta') >= 0 ? 'cta' : '');
+    var opt = secOpts[key] || {count:isMobile?220:500, radius:isMobile?1.6:2.0, x:0, y:0};
+    makeScene(el, opt);
+  }
+
+  var targetX = 0, targetY = 0;
   if(isFine && !reduced){
     window.addEventListener('pointermove', function(e){
       targetY = (e.clientX / window.innerWidth - 0.5) * 0.55;
@@ -760,31 +789,53 @@ document.addEventListener('DOMContentLoaded', function(){
   }
 
   var bgType = document.querySelector('.bg-type');
+  var rot = 0;
   function tick(){
     requestAnimationFrame(tick);
     rot += 0.0016;
-    curX += (targetX - curX) * 0.05;
-    curY += (targetY - curY) * 0.05;
-    group.rotation.x = curX + Math.sin(rot*0.7)*0.035;
-    group.rotation.y = curY + rot*2.2;
-    if(bgType && !reduced){
-      bgType.style.transform = 'translate(-50%,-52%) translate('+(curY*30)+'px,'+(curX*18)+'px)';
+    var sw = Math.sin(rot*0.7)*0.035;
+    var ry = rot*2.2;
+    var hero = scenes.length ? scenes[0] : null;
+    for(var i=0;i<scenes.length;i++){
+      var s = scenes[i];
+      if(!s.running) continue;
+      s.curX += (targetX - s.curX) * 0.05;
+      s.curY += (targetY - s.curY) * 0.05;
+      s.group.rotation.x = s.curX + sw;
+      s.group.rotation.y = s.curY + ry;
+      s.renderer.render(s.scene, s.camera);
     }
-    renderer.render(scene, camera);
+    if(bgType && !reduced && hero){
+      bgType.style.transform = 'translate(-50%,-52%) translate('+(hero.curY*30)+'px,'+(hero.curX*18)+'px)';
+    }
   }
-  if(!reduced){
-    tick();
+
+  if(reduced){
+    for(var j=0;j<scenes.length;j++){ scenes[j].group.rotation.y = 0.5; scenes[j].renderer.render(scenes[j].scene, scenes[j].camera); }
   } else {
-    group.rotation.y = 0.5;
-    renderer.render(scene, camera);
+    tick();
+  }
+
+  if('IntersectionObserver' in window && !reduced){
+    var io = new IntersectionObserver(function(entries){
+      for(var k=0;k<entries.length;k++){
+        var s = entries[k].target._scene;
+        if(s) s.running = entries[k].isIntersecting;
+      }
+    }, {threshold:0.06});
+    for(var m=0;m<scenes.length;m++){ scenes[m].container._scene = scenes[m]; io.observe(scenes[m].container); }
+  } else {
+    for(var n=0;n<scenes.length;n++){ scenes[n].running = true; }
   }
 
   window.addEventListener('resize', function(){
-    var nw = container.clientWidth || window.innerWidth;
-    var nh = container.clientHeight || window.innerHeight;
-    if(nw<1 || nh<1) return;
-    camera.aspect = nw/nh; camera.updateProjectionMatrix();
-    renderer.setSize(nw, nh);
+    for(var p=0;p<scenes.length;p++){
+      var s = scenes[p];
+      var w = s.container.clientWidth, h = s.container.clientHeight;
+      if(w<10 || h<10) return;
+      s.camera.aspect = w/h; s.camera.updateProjectionMatrix();
+      s.renderer.setSize(w, h);
+    }
   });
 })();
 });
