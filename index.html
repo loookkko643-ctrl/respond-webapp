@@ -46,7 +46,7 @@ a{color:inherit}
 .header .cta{background:var(--ink);color:var(--paper);padding:9px 20px;border-radius:var(--radius);text-decoration:none;font-size:12px;font-weight:700;letter-spacing:0.4px;transition:background 0.2s}
 .header .cta:hover{background:var(--shu-deep)}
 /* ===== Hero ===== */
-.hero{padding:64px 32px 60px;max-width:1180px;margin:0 auto}
+.hero{position:relative;overflow:hidden;padding:64px 32px 60px;max-width:1180px;margin:0 auto}
 @media(max-width:720px){.hero{padding:28px 18px 20px}}
 .h-wrap{display:flex;justify-content:space-between;align-items:flex-start;gap:52px}
 @media(max-width:960px){.h-wrap{flex-direction:column;gap:34px}}
@@ -258,7 +258,24 @@ a{color:inherit}
 }
 .price-card.guide-card .btn-guide:hover{background:var(--shu-deep)}
 
+/* ===== Hero 3D ink-cloud & entrance ===== */
+#hero3d{position:absolute;inset:0;z-index:1;pointer-events:none;animation:heroFade 1.5s ease-out 0.5s both}
+.hero .h-wrap{position:relative;z-index:2}
+.bg-type{position:absolute;z-index:0;top:50%;left:50%;transform:translate(-50%,-52%);font-family:'Zen Old Mincho',serif;font-size:clamp(160px,28vw,440px);font-weight:700;color:var(--ink);opacity:0.05;letter-spacing:0.02em;white-space:nowrap;pointer-events:none;user-select:none;line-height:1}
+@media(max-width:720px){.bg-type{font-size:clamp(110px,34vw,180px);opacity:0.04}}
+.hero .bg-type{animation:heroFade 1.3s ease-out 0.15s both}
+.hero .left .tategaki{animation:heroFade 1s ease-out 0.55s both}
+.hero .copy .tag{animation:heroUp 0.75s ease-out 0.75s both}
+.hero .copy h1{animation:heroUp 0.85s ease-out 0.9s both}
+.hero .copy .desc{animation:heroUp 0.8s ease-out 1.05s both}
+.hero .copy .btns{animation:heroUp 0.8s ease-out 1.2s both}
+.hero .copy .guide-banner{animation:heroUp 0.8s ease-out 1.35s both}
+.hero .right{animation:heroUp 0.9s ease-out 1.0s both}
+@keyframes heroFade{from{opacity:0}to{opacity:1}}
+@keyframes heroUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js" defer></script>
 </head>
 <body>
 
@@ -287,6 +304,8 @@ a{color:inherit}
 
 <!-- Hero -->
 <div class="hero">
+  <div class="bg-type" aria-hidden="true">違和感</div>
+  <div id="hero3d" aria-hidden="true"></div>
   <div class="h-wrap">
     <div class="left">
       <div class="tategaki">正確さより、違和感のなさ</div>
@@ -650,6 +669,122 @@ document.addEventListener('DOMContentLoaded',function(){
     speechSynthesis.getVoices();
     speechSynthesis.onvoiceschanged=function(){};
   }
+});
+
+/* ---- hero 3D ink-cloud particles ---- */
+document.addEventListener('DOMContentLoaded', function(){
+(function(){
+  var container = document.getElementById('hero3d');
+  var hero = document.querySelector('.hero');
+  if(!container || !hero || typeof THREE === 'undefined') return;
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var isMobile = window.matchMedia && window.matchMedia('(max-width:720px)').matches;
+  var isFine = window.matchMedia && window.matchMedia('(pointer:fine)').matches;
+  var COUNT = isMobile ? 520 : 1400;
+  var RADIUS = isMobile ? 2.6 : 3.6;
+
+  var w = container.clientWidth || hero.clientWidth;
+  var h = container.clientHeight || hero.clientHeight;
+  var scene = new THREE.Scene();
+  var camera = new THREE.PerspectiveCamera(45, w/h, 0.1, 100);
+  camera.position.set(0, 0, 8);
+
+  var renderer = new THREE.WebGLRenderer({alpha:true, antialias:!isMobile});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio||1, isMobile?1.5:2));
+  renderer.setSize(w, h);
+  container.appendChild(renderer.domElement);
+
+  function dotTexture(){
+    var c = document.createElement('canvas'); c.width = c.height = 64;
+    var x = c.getContext('2d');
+    var g = x.createRadialGradient(32,32,0,32,32,32);
+    g.addColorStop(0,'rgba(255,255,255,1)');
+    g.addColorStop(0.35,'rgba(255,255,255,0.75)');
+    g.addColorStop(1,'rgba(255,255,255,0)');
+    x.fillStyle = g; x.fillRect(0,0,64,64);
+    return new THREE.CanvasTexture(c);
+  }
+
+  function cloud(n){
+    var arr = new Float32Array(n*3);
+    for(var i=0;i<n;i++){
+      var u = Math.random()+Math.random()+Math.random();
+      var rr = (u/3) * RADIUS;
+      var th = Math.random()*Math.PI*2;
+      var ph = Math.acos(2*Math.random()-1);
+      arr[i*3]   = rr*Math.sin(ph)*Math.cos(th);
+      arr[i*3+1] = rr*Math.cos(ph);
+      arr[i*3+2] = rr*Math.sin(ph)*Math.sin(th);
+    }
+    return arr;
+  }
+
+  var tex = dotTexture();
+  var group = new THREE.Group();
+  var inkN = Math.floor(COUNT*0.82);
+  var ink = new THREE.Points(
+    new THREE.BufferGeometry(),
+    new THREE.PointsMaterial({color:0x201C17, size:isMobile?0.09:0.075, map:tex, transparent:true, opacity:0.5, depthWrite:false})
+  );
+  ink.geometry.setAttribute('position', new THREE.BufferAttribute(cloud(inkN),3));
+  group.add(ink);
+
+  var accN = COUNT - inkN;
+  var acc = new THREE.Points(
+    new THREE.BufferGeometry(),
+    new THREE.PointsMaterial({color:0xAC3B26, size:isMobile?0.11:0.09, map:tex, transparent:true, opacity:0.55, depthWrite:false})
+  );
+  acc.geometry.setAttribute('position', new THREE.BufferAttribute(cloud(accN),3));
+  group.add(acc);
+
+  group.position.x = -0.8;
+  group.position.y = 0.2;
+  scene.add(group);
+
+  var targetX = 0, targetY = 0, curX = 0, curY = 0, rot = 0;
+  if(isFine && !reduced){
+    window.addEventListener('pointermove', function(e){
+      targetY = (e.clientX / window.innerWidth - 0.5) * 0.55;
+      targetX = (e.clientY / window.innerHeight - 0.5) * 0.35;
+    }, {passive:true});
+  }
+
+  var bgType = document.querySelector('.bg-type');
+  var running = false;
+  function tick(){
+    if(!running) return;
+    requestAnimationFrame(tick);
+    rot += 0.0016;
+    curX += (targetX - curX) * 0.05;
+    curY += (targetY - curY) * 0.05;
+    group.rotation.x = curX + Math.sin(rot*0.7)*0.035;
+    group.rotation.y = curY + rot*2.2;
+    if(bgType && !reduced){
+      bgType.style.transform = 'translate(-50%,-52%) translate('+(curY*30)+'px,'+(curX*18)+'px)';
+    }
+    renderer.render(scene, camera);
+  }
+  if(!reduced){
+    var io = new IntersectionObserver(function(en){
+      en.forEach(function(e){
+        if(e.isIntersecting){ if(!running){ running = true; tick(); } }
+        else { running = false; }
+      });
+    }, {threshold:0.05});
+    io.observe(hero);
+  } else {
+    group.rotation.y = 0.5;
+    renderer.render(scene, camera);
+  }
+
+  window.addEventListener('resize', function(){
+    var nw = container.clientWidth || hero.clientWidth;
+    var nh = container.clientHeight || hero.clientHeight;
+    if(nw<1 || nh<1) return;
+    camera.aspect = nw/nh; camera.updateProjectionMatrix();
+    renderer.setSize(nw, nh);
+  });
+})();
 });
 </script>
 </body>
