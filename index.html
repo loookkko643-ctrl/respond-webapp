@@ -263,7 +263,7 @@ a{color:inherit}
 .hero .h-wrap{position:relative;z-index:2}
 .bg-type{position:absolute;z-index:0;top:50%;left:50%;transform:translate(-50%,-52%);font-family:'Zen Old Mincho',serif;font-size:clamp(160px,28vw,440px);font-weight:700;color:var(--ink);opacity:0.05;letter-spacing:0.02em;white-space:nowrap;pointer-events:none;user-select:none;line-height:1}
 @media(max-width:720px){.bg-type{font-size:clamp(110px,34vw,180px);opacity:0.04}}
-.hero .bg-type{animation:heroFade 1.3s ease-out 0.15s both}
+.hero .bg-type{animation:bgFade 1.3s ease-out 0.15s both}
 .hero .left .tategaki{animation:heroFade 1s ease-out 0.55s both}
 .hero .copy .tag{animation:heroUp 0.75s ease-out 0.75s both}
 .hero .copy h1{animation:heroUp 0.85s ease-out 0.9s both}
@@ -273,6 +273,7 @@ a{color:inherit}
 .hero .right{animation:heroUp 0.9s ease-out 1.0s both}
 @keyframes heroFade{from{opacity:0}to{opacity:1}}
 @keyframes heroUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes bgFade{from{opacity:0}to{opacity:0.05}}
 
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js" defer></script>
@@ -680,8 +681,8 @@ document.addEventListener('DOMContentLoaded', function(){
   var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var isMobile = window.matchMedia && window.matchMedia('(max-width:720px)').matches;
   var isFine = window.matchMedia && window.matchMedia('(pointer:fine)').matches;
-  var COUNT = isMobile ? 520 : 1400;
-  var RADIUS = isMobile ? 2.6 : 3.6;
+  var COUNT = isMobile ? 420 : 1100;
+  var RADIUS = isMobile ? 1.9 : 2.4;
 
   var w = container.clientWidth || hero.clientWidth;
   var h = container.clientHeight || hero.clientHeight;
@@ -724,7 +725,7 @@ document.addEventListener('DOMContentLoaded', function(){
   var inkN = Math.floor(COUNT*0.82);
   var ink = new THREE.Points(
     new THREE.BufferGeometry(),
-    new THREE.PointsMaterial({color:0x201C17, size:isMobile?0.09:0.075, map:tex, transparent:true, opacity:0.5, depthWrite:false})
+    new THREE.PointsMaterial({color:0x201C17, size:isMobile?0.075:0.06, map:tex, transparent:true, opacity:0.38, depthWrite:false})
   );
   ink.geometry.setAttribute('position', new THREE.BufferAttribute(cloud(inkN),3));
   group.add(ink);
@@ -732,12 +733,12 @@ document.addEventListener('DOMContentLoaded', function(){
   var accN = COUNT - inkN;
   var acc = new THREE.Points(
     new THREE.BufferGeometry(),
-    new THREE.PointsMaterial({color:0xAC3B26, size:isMobile?0.11:0.09, map:tex, transparent:true, opacity:0.55, depthWrite:false})
+    new THREE.PointsMaterial({color:0xAC3B26, size:isMobile?0.095:0.075, map:tex, transparent:true, opacity:0.45, depthWrite:false})
   );
   acc.geometry.setAttribute('position', new THREE.BufferAttribute(cloud(accN),3));
   group.add(acc);
 
-  group.position.x = -0.8;
+  group.position.x = -1.1;
   group.position.y = 0.2;
   scene.add(group);
 
