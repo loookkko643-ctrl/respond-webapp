@@ -4,7 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>respond — 違和感のないAI自動応対</title>
+<meta name="description" content="14世代の会話データから、その世代らしい自然な応答を自動生成するAI自動応対システム。正確さより、違和感のなさ。">
+<meta property="og:title" content="respond — 違和感のないAI自動応対">
+<meta property="og:description" content="14世代の会話データから、その世代らしい自然な応答を自動生成。AIを感じさせない、心地よいコミュニケーションを。">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#0D0B09">
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;500;700&family=Zen+Kaku+Gothic+New:wght@300;400;500;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -13,7 +19,7 @@
   --bg-card:#181410;
   --fg:#F3EDE4;
   --fg-soft:#A89F92;
-  --fg-faint:#6B6459;
+  --fg-faint:#8A8173;
   --line:rgba(243,237,228,0.14);
   --shu:#C8553A;
   --amber:#D9A05B;
@@ -21,7 +27,8 @@
   --radius:4px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto !important}}
 body{font-family:'Zen Kaku Gothic New','Inter',sans-serif;background:var(--bg);color:var(--fg);overflow-x:hidden;font-weight:400}
 ::selection{background:var(--shu);color:#fff}
 a{color:inherit}
@@ -41,9 +48,15 @@ a{color:inherit}
 .header .burger{display:none;width:34px;height:34px;border:1px solid rgba(243,237,228,0.3);border-radius:6px;background:transparent;cursor:pointer;flex-direction:column;align-items:center;justify-content:center;gap:5px}
 .header .burger span{display:block;width:15px;height:1.5px;background:#fff}
 @media(max-width:960px){.header nav{display:none}.header .burger{display:flex}}
+.mobile-menu{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:99;background:rgba(13,11,9,0.97);backdrop-filter:blur(10px);flex-direction:column;justify-content:center;align-items:center;gap:26px}
+.mobile-menu.open{display:flex}
+.mobile-menu .link{color:var(--fg);text-decoration:none;font-size:16px;font-weight:500;letter-spacing:0.5px}
+.mobile-menu .link:hover{color:var(--amber)}
+.mobile-menu .cta{color:#fff;padding:10px 30px;border-radius:100px;text-decoration:none;font-size:14px;font-weight:600;border:1px solid rgba(243,237,228,0.4);margin-top:8px}
+@media(min-width:961px){.mobile-menu{display:none !important}}
 
 /* ===== Hero ===== */
-.hero{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden}
+.hero{position:relative;min-height:100svh;display:flex;align-items:center;overflow:hidden}
 .hero-bgvid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:0.75;filter:brightness(0.72) saturate(1.05);pointer-events:none}
 .hero-overlay{position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(13,11,9,0.86) 0%,rgba(13,11,9,0.5) 45%,rgba(13,11,9,0.28) 100%),linear-gradient(0deg,rgba(13,11,9,0.9) 0%,rgba(13,11,9,0.15) 40%,rgba(13,11,9,0.55) 100%);pointer-events:none}
 .hero-inner{position:relative;z-index:2;max-width:1180px;margin:0 auto;width:100%;padding:140px 44px 80px;display:flex;justify-content:space-between;align-items:center;gap:56px}
@@ -249,7 +262,18 @@ a{color:inherit}
     <a href="#" class="link">FAQ</a>
     <a href="#" class="cta">Contact</a>
   </nav>
-  <div class="burger" id="burgerBtn"><span></span><span></span><span></span></div>
+  <div class="burger" id="burgerBtn" aria-label="メニュー" aria-expanded="false"><span></span><span></span><span></span></div>
+</div>
+
+<!-- Mobile menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#philosophy" class="link">Philosophy</a>
+  <a href="#diff" class="link">Feature</a>
+  <a href="#generations" class="link">Generation</a>
+  <a href="#demo" class="link">Demo</a>
+  <a href="#pricing" class="link">Pricing</a>
+  <a href="#" class="link">FAQ</a>
+  <a href="#" class="cta">Contact</a>
 </div>
 
 <!-- Hero -->
@@ -628,6 +652,20 @@ function toggleVoice(){
 document.addEventListener('DOMContentLoaded',function(){
   document.getElementById('heroChatInput').focus();
   unlockAudio();
+  var burger=document.getElementById('burgerBtn');
+  var menu=document.getElementById('mobileMenu');
+  if(burger&&menu){
+    burger.addEventListener('click',function(){
+      var open=menu.classList.toggle('open');
+      burger.setAttribute('aria-expanded',open?'true':'false');
+    });
+    menu.querySelectorAll('a').forEach(function(a){
+      a.addEventListener('click',function(){
+        menu.classList.remove('open');
+        burger.setAttribute('aria-expanded','false');
+      });
+    });
+  }
   var micBtn=document.getElementById('micBtn');
   if(micBtn){
     if(micSupported){ micBtn.style.display='flex'; micBtn.addEventListener('click',startMic); }
