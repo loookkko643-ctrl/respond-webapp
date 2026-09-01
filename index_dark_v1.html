@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>respond — 違和感のないAI自動応対</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;500;700&family=Zen+Kaku+Gothic+New:wght@300;400;500;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#0D0B09;
+  --paper-deep:#161310;
+  --ink:#F3EDE4;
+  --ink-soft:#A89F92;
+  --ink-faint:#6B6459;
+  --line:#2A251F;
+  --card:#181410;
+  --shu:#C8553A;
+  --shu-deep:#E06A4C;
+  --shu-wash:#3A221A;
+  --amber:#D9A05B;
+  --radius:4px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Zen Kaku Gothic New','Inter',sans-serif;background:var(--paper);color:var(--ink);overflow-x:hidden;font-weight:400}
+::selection{background:var(--shu);color:#fff}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+@media (prefers-reduced-motion: reduce){*{animation:none !important;transition:none !important}}
+
+/* ===== hanko seal mark ===== */
+.hanko{position:relative;width:34px;height:34px;flex-shrink:0}
+.hanko svg{width:100%;height:100%;transform:rotate(-7deg)}
+
+/* ===== Header ===== */
+.header{display:flex;align-items:center;justify-content:space-between;padding:20px 32px;max-width:1180px;margin:0 auto}
+@media(max-width:720px){.header{padding:14px 18px}}
+.header .brand{display:flex;align-items:center;gap:12px;font-family:'Zen Old Mincho',serif;font-size:21px;letter-spacing:1px}
+@media(max-width:400px){.header .brand{font-size:18px;gap:9px}}
+.header nav{display:flex;gap:26px;align-items:center}
+@media(max-width:400px){.header nav{gap:12px}}
+.header nav a.link{color:var(--ink-soft);text-decoration:none;font-size:12.5px;font-weight:500;letter-spacing:0.3px;transition:color 0.2s;position:relative}
+.header nav a.link::after{content:'';position:absolute;left:0;right:100%;bottom:-4px;height:1px;background:var(--shu);transition:right 0.25s ease}
+.header nav a.link:hover{color:var(--ink)}
+.header nav a.link:hover::after{right:0}
+@media(max-width:400px){.header nav a.link{display:none}}
+.header .cta{background:var(--ink);color:var(--paper);padding:9px 20px;border-radius:var(--radius);text-decoration:none;font-size:12px;font-weight:700;letter-spacing:0.4px;transition:background 0.2s}
+.header .cta:hover{background:var(--shu-deep)}
+/* ===== Hero ===== */
+.hero{padding:64px 32px 60px;max-width:1180px;margin:0 auto}
+@media(max-width:720px){.hero{padding:28px 18px 20px}}
+/* 다크 영상 배경 히어로 — 흑야 카페 분위기 */
+.hero-video{position:relative;overflow:hidden;max-width:100%;padding-left:max(32px,calc((100% - 1180px)/2));padding-right:max(32px,calc((100% - 1180px)/2))}
+.hero-bgvid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:0.42;filter:saturate(1.15) brightness(0.55) sepia(0.35) hue-rotate(-15deg);pointer-events:none}
+.hero-vid-overlay{position:absolute;inset:0;z-index:0;background:linear-gradient(90deg,rgba(13,11,9,0.88) 0%,rgba(13,11,9,0.55) 45%,rgba(13,11,9,0.15) 100%),linear-gradient(0deg,rgba(13,11,9,0.9) 0%,rgba(13,11,9,0.2) 30%,rgba(13,11,9,0.55) 100%);pointer-events:none}
+.hero-video .h-wrap{position:relative;z-index:1}
+@media(max-width:960px){.hero-vid-overlay{background:rgba(13,11,9,0.82)}}
+.h-wrap{display:flex;justify-content:space-between;align-items:flex-start;gap:52px}
+@media(max-width:960px){.h-wrap{flex-direction:column;gap:34px}}
+.hero .left{flex:1;display:flex;gap:20px}
+@media(max-width:720px){.hero .left{gap:12px}}
+.tategaki{writing-mode:vertical-rl;text-orientation:mixed;font-size:11.5px;font-weight:700;letter-spacing:0.35em;color:var(--amber);flex-shrink:0;padding-top:4px;white-space:nowrap}
+@media(max-width:600px){.tategaki{display:none}}
+.hero .copy{flex:1}
+.hero .tag{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;color:var(--ink-soft);letter-spacing:0.5px;margin-bottom:22px;border:1px solid var(--line);padding:5px 13px 5px 10px;border-radius:100px;font-family:'Inter',sans-serif}
+.hero .tag .dot{width:6px;height:6px;border-radius:50%;background:var(--amber);display:inline-block}
+.hero h1{font-family:'Zen Old Mincho',serif;font-size:clamp(34px,5vw,58px);line-height:1.35;letter-spacing:0.01em;color:var(--ink);margin-bottom:24px;font-weight:500}
+@media(max-width:400px){.hero h1{font-size:clamp(27px,7.5vw,34px)}}
+.hero h1 .em{color:var(--amber);position:relative}
+.hero p.desc{font-size:15px;color:var(--ink-soft);line-height:1.85;max-width:430px;margin-bottom:34px}
+@media(max-width:420px){.hero p.desc{font-size:13.5px}}
+.hero .btns{display:flex;gap:10px}
+@media(max-width:400px){.hero .btns{flex-direction:column}}
+.btn-primary{background:var(--ink);color:var(--paper);padding:13px 28px;border-radius:var(--radius);text-decoration:none;font-weight:700;font-size:13px;letter-spacing:0.3px;transition:background 0.2s;display:inline-block;text-align:center}
+.btn-primary:hover{background:#fff}
+.btn-ghost{color:var(--ink);padding:13px 28px;border-radius:var(--radius);text-decoration:none;border:1px solid var(--ink-faint);font-size:13px;font-weight:500;transition:all 0.2s;display:inline-block;text-align:center}
+.btn-ghost:hover{border-color:var(--ink);background:rgba(243,237,228,0.08)}
+.hero .right{width:378px;flex-shrink:0}
+@media(max-width:960px){.hero .right{width:100%;max-width:420px;margin:0 auto}}
+/* ===== Chat Widget ===== */
+.chat-widget{background:rgba(22,19,16,0.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-radius:10px;border:1px solid rgba(243,237,228,0.14);box-shadow:0 24px 60px -20px rgba(0,0,0,0.7);position:relative;display:flex;flex-direction:column;height:440px;overflow:hidden}
+@media(max-width:960px){.chat-widget{height:380px}}
+@media(max-width:420px){.chat-widget{border-radius:8px;height:340px}}
+.chat-widget .bar{display:flex;align-items:center;gap:8px;padding:13px 18px;border-bottom:1px solid rgba(243,237,228,0.1);flex-shrink:0;background:rgba(22,19,16,0.6)}
+.chat-widget .bar .title{font-size:12px;font-weight:700;color:var(--ink);letter-spacing:0.2px}
+.chat-widget .bar .status{margin-left:auto;display:flex;align-items:center;gap:5px;font-size:10px;font-weight:600;color:var(--ink-soft);letter-spacing:0.2px;font-family:'Inter',sans-serif}
+.chat-widget .bar .status::before{content:'';width:5px;height:5px;border-radius:50%;background:#4ADE80;display:inline-block}
+.chat-widget .ch-body{overflow-y:auto;flex:1;padding:18px 16px 8px;scroll-behavior:smooth;background:transparent}
+.chat-widget .ch-body::-webkit-scrollbar{width:3px}
+.chat-widget .ch-body::-webkit-scrollbar-thumb{background:rgba(243,237,228,0.15);border-radius:2px}
+.chat-widget .m{display:flex;gap:9px;margin-bottom:14px;animation:fadeIn 0.25s ease-out}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.chat-widget .m .a{width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:4px;font-family:'Inter',sans-serif}
+.chat-widget .m .b{padding:10px 14px;border-radius:6px;font-size:13px;line-height:1.65;max-width:84%;word-break:break-word}
+@media(max-width:400px){.chat-widget .m .b{font-size:12px;padding:8px 12px;max-width:90%}}
+.chat-widget .m.u{flex-direction:row-reverse}
+.chat-widget .m.u .a{background:rgba(243,237,228,0.9);color:var(--paper)}
+.chat-widget .m.u .b{background:rgba(243,237,228,0.92);color:#181410;border-bottom-right-radius:2px}
+.chat-widget .m.b .a{background:var(--shu);color:#fff}
+.chat-widget .m.b .b{background:rgba(42,37,31,0.85);border:1px solid rgba(243,237,228,0.08);border-bottom-left-radius:2px;color:var(--ink)}
+.chat-widget .m .b .t{font-size:9px;color:var(--ink-faint);margin-top:6px;text-align:right;font-family:'Inter',sans-serif}
+.chat-widget .m.u .b .t{color:rgba(24,20,16,0.4)}
+.chat-widget .m .b .l{font-size:8px;color:var(--amber);font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;font-family:'Inter',sans-serif}
+.chat-widget .ch-foot{display:flex;align-items:center;gap:0;padding:10px 14px 12px;border-top:1px solid rgba(243,237,228,0.1);flex-shrink:0;margin-top:auto;background:rgba(22,19,16,0.6)}
+.chat-widget .ch-foot input{flex:1;border:1px solid rgba(243,237,228,0.15);border-radius:6px;padding:10px 14px;font-size:13px;outline:none;font-family:'Zen Kaku Gothic New',sans-serif;color:var(--ink);background:rgba(13,11,9,0.5);transition:border-color 0.2s}
+.chat-widget .ch-foot input::placeholder{color:var(--ink-faint);font-weight:400}
+.chat-widget .ch-foot input:focus{border-color:rgba(243,237,228,0.4)}
+.chat-widget .ch-foot .cs{margin-left:8px;width:36px;height:36px;border-radius:6px;background:var(--ink);color:var(--paper);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s;flex-shrink:0}
+.chat-widget .ch-foot .cs:hover{background:#fff}
+.chat-widget .ch-foot .cs svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.chat-widget .typing{font-size:11px;color:var(--ink-faint);padding:0 18px 6px;display:none;font-family:'Inter',sans-serif}
+.chat-widget .typing.show{display:block;animation:typingPulse 1.2s ease-in-out infinite}
+@keyframes typingPulse{0%,100%{opacity:0.4}50%{opacity:1}}
+/* ===== Voice (STT / TTS) ===== */
+.chat-widget .bar .spk{margin-left:10px;width:28px;height:28px;border-radius:6px;background:transparent;color:var(--ink-soft);border:1px solid rgba(243,237,228,0.15);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;flex-shrink:0;padding:0}
+.chat-widget .bar .spk:hover{color:var(--ink);border-color:rgba(243,237,228,0.4)}
+.chat-widget .bar .spk svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.chat-widget .bar .spk.on{color:var(--amber);border-color:var(--amber)}
+.chat-widget .bar .spk.off{opacity:0.5}
+.chat-widget .bar .spk.off svg{display:none}
+.chat-widget .bar .spk.off::after{content:'×';font-size:14px;font-weight:700;color:var(--ink-faint)}
+.chat-widget .ch-foot .mic{width:36px;height:36px;border-radius:6px;background:rgba(13,11,9,0.5);color:var(--ink);border:1px solid rgba(243,237,228,0.15);cursor:pointer;display:none;align-items:center;justify-content:center;transition:all 0.2s;flex-shrink:0;margin-right:8px;padding:0}
+.chat-widget .ch-foot .mic:hover{border-color:var(--amber);color:var(--amber)}
+.chat-widget .ch-foot .mic.listening{background:var(--shu);color:#fff;border-color:var(--shu);animation:micPulse 1.1s ease-in-out infinite}
+@keyframes micPulse{0%,100%{opacity:1}50%{opacity:0.55}}
+.chat-widget .ch-foot .mic svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+/* ===== Section common ===== */
+.section{padding:88px 32px;max-width:1180px;margin:0 auto}
+@media(max-width:720px){.section{padding:52px 18px}}
+.sec-head{display:flex;gap:20px;margin-bottom:44px}
+@media(max-width:600px){.sec-head{gap:0;flex-direction:column}}
+.sec-head .tategaki{padding-top:6px}
+.sec-head .tategaki.horiz-fallback{display:none}
+@media(max-width:600px){
+  .sec-head .tategaki{display:none}
+  .sec-head .tategaki.horiz-fallback{display:block;writing-mode:horizontal-tb;font-size:11px;font-weight:700;letter-spacing:0.25em;color:var(--amber);margin-bottom:10px}
+}
+.section h2{font-family:'Zen Old Mincho',serif;font-size:clamp(26px,3.6vw,38px);font-weight:500;letter-spacing:0.01em;color:var(--ink);margin-bottom:12px}
+@media(max-width:400px){.section h2{font-size:clamp(21px,6vw,26px)}}
+.section h2 .em{color:var(--amber)}
+.section .sub{color:var(--ink-soft);font-size:13.5px;line-height:1.8;max-width:420px}
+
+/* ===== kanji numeral roundel ===== */
+.roundel{width:36px;height:36px;border-radius:50%;border:1px solid var(--ink-faint);display:flex;align-items:center;justify-content:center;font-family:'Zen Old Mincho',serif;font-size:16px;color:var(--ink);flex-shrink:0;margin-bottom:16px}
+
+/* ===== Differences grid ===== */
+.diff-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+@media(max-width:800px){.diff-grid{grid-template-columns:1fr}}
+.diff-item{background:var(--paper-deep);padding:28px 26px;transition:background 0.2s}
+.diff-item:hover{background:#1E1913}
+.diff-item h3{font-weight:700;font-size:14.5px;margin-bottom:8px;letter-spacing:0.2px}
+.diff-item p{font-size:12.5px;color:var(--ink-soft);line-height:1.75}
+
+/* ===== Generations — route-line timeline ===== */
+.line-scroll{overflow-x:auto;padding-bottom:6px;-webkit-overflow-scrolling:touch}
+.line-scroll::-webkit-scrollbar{height:4px}
+.line-scroll::-webkit-scrollbar-thumb{background:var(--line);border-radius:2px}
+.route{display:flex;min-width:1220px;position:relative;padding:74px 6px 74px}
+@media(max-width:720px){.route{min-width:980px;padding:60px 6px 60px}}
+.route::before{content:'';position:absolute;left:0;right:0;top:50%;height:2px;background:var(--shu);transform:translateY(-1px)}
+.stop{flex:1;position:relative;display:flex;justify-content:center}
+.stop .node{width:11px;height:11px;border-radius:50%;background:var(--paper);border:2.5px solid var(--shu);position:relative;z-index:2;margin-top:-4px}
+.stop .card{position:absolute;left:50%;transform:translateX(-50%);width:130px;text-align:center}
+.stop.above .card{bottom:calc(50% + 16px)}
+.stop.below .card{top:calc(50% + 16px)}
+.stop .age{font-family:'Zen Old Mincho',serif;font-size:16px;color:var(--ink);line-height:1.3}
+.stop .desc{font-size:10.5px;color:var(--ink-soft);line-height:1.6;margin-top:5px}
+.route-hint{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--ink-faint);margin-top:6px;font-family:'Inter',sans-serif}
+@media(min-width:960px){.route-hint{display:none}}
+
+/* ===== Philosophy — 心技体 ===== */
+.phil{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+@media(max-width:720px){.phil{grid-template-columns:1fr}}
+.phil-item{background:var(--paper-deep);padding:34px 28px}
+.phil-item .kanji{font-family:'Zen Old Mincho',serif;font-size:44px;line-height:1;color:var(--amber);margin-bottom:6px}
+.phil-item .gloss{font-size:10.5px;color:var(--ink-faint);letter-spacing:0.2em;font-family:'Inter',sans-serif;text-transform:uppercase;margin-bottom:18px}
+.phil-item h3{font-weight:700;font-size:14.5px;margin-bottom:8px;line-height:1.5}
+.phil-item p{font-size:12.5px;color:var(--ink-soft);line-height:1.75}
+/* ===== Market comparison ===== */
+.comp-table{width:100%;border-collapse:collapse;font-size:13px;border:1px solid var(--line)}
+.comp-table th,.comp-table td{padding:14px 18px;text-align:left;border-bottom:1px solid var(--line)}
+@media(max-width:720px){.comp-table th,.comp-table td{padding:9px 11px;font-size:11px}}
+.comp-table th{background:var(--paper-deep);font-weight:700;font-size:11.5px;color:var(--ink-soft);letter-spacing:0.3px;font-family:'Inter',sans-serif}
+.comp-table th:last-child{color:var(--amber)}
+.comp-table tr:last-child td{border-bottom:none}
+.comp-table td:first-child{font-weight:700;color:var(--ink-soft);font-size:12px}
+.comp-table td:last-child{color:var(--ink);font-weight:500;position:relative}
+.comp-table td:last-child::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--amber)}
+
+/* ===== Pricing ===== */
+.price-wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-top:8px}
+@media(max-width:720px){.price-wrap{grid-template-columns:1fr}}
+.price-card{background:var(--paper-deep);padding:30px 24px;text-align:center;transition:background 0.2s}
+.price-card.featured{background:#F3EDE4;color:#181410}
+.price-card .price-label{font-size:11px;font-weight:700;color:var(--ink-soft);letter-spacing:0.4px;margin-bottom:10px;font-family:'Inter',sans-serif}
+.price-card.featured .price-label{color:rgba(24,20,16,0.55)}
+.price-card .price-amount{font-family:'Zen Old Mincho',serif;font-size:30px;font-weight:500;color:var(--ink)}
+.price-card.featured .price-amount{color:#181410}
+.price-card .price-amount small{font-size:13px;color:var(--ink-faint);font-family:'Inter',sans-serif}
+.price-card.featured .price-amount small{color:rgba(24,20,16,0.5)}
+.price-card p{font-size:12px;color:var(--ink-soft);line-height:1.7;margin-top:10px}
+.price-card.featured p{color:rgba(24,20,16,0.65)}
+
+/* ===== CTA ===== */
+.cta-wrap{padding:60px 32px 100px;max-width:1180px;margin:0 auto}
+@media(max-width:720px){.cta-wrap{padding:20px 18px 56px}}
+.cta-box{background:var(--paper-deep);border:1px solid var(--line);border-radius:8px;padding:64px 32px;text-align:center;color:var(--ink);position:relative;overflow:hidden}
+@media(max-width:720px){.cta-box{padding:40px 20px;border-radius:6px}}
+.cta-box .hanko{position:absolute;top:24px;right:28px;width:48px;height:48px;opacity:0.9}
+.cta-box h2{font-family:'Zen Old Mincho',serif;font-size:clamp(26px,3.6vw,34px);font-weight:500;margin-bottom:10px;color:var(--ink)}
+.cta-box p{color:var(--ink-soft);font-size:13.5px;margin-bottom:30px;max-width:420px;margin-left:auto;margin-right:auto}
+.cta-box .btn{background:var(--ink);color:var(--paper);padding:13px 32px;border-radius:var(--radius);text-decoration:none;font-weight:700;font-size:13px;display:inline-block;transition:background 0.2s}
+.cta-box .btn:hover{background:#fff;color:var(--paper)}
+.cta-box .small{font-size:11px;color:var(--ink-faint);margin-top:16px;font-family:'Inter',sans-serif}
+
+/* ===== Footer ===== */
+.footer{border-top:1px solid var(--line);padding:30px 32px;text-align:center;font-size:12px;color:var(--ink-faint)}
+@media(max-width:400px){.footer{padding:22px 14px;font-size:11px}}
+.footer .l{display:flex;justify-content:center;align-items:center;gap:20px;margin-bottom:10px;flex-wrap:wrap}
+.footer .l a{color:var(--ink-soft);text-decoration:none;font-size:12px}
+.footer .l a:hover{color:var(--ink)}
+.footer .foot-hanko{width:16px;height:16px}
+.footer .copyright{font-family:'Inter',sans-serif;font-size:11px}
+/* ===== Guide banner (hero) ===== */
+.guide-banner{
+  display:inline-flex;align-items:center;gap:14px;
+  border:1px solid rgba(243,237,228,0.16);border-left:4px solid var(--amber);
+  border-radius:var(--radius);
+  background:rgba(22,19,16,0.75);
+  padding:16px 24px;
+  margin-top:32px;
+  font-size:17px;color:var(--ink);
+  text-decoration:none;
+  transition:border-color 0.2s,background 0.2s;
+  max-width:100%;
+}
+.guide-banner:hover{border-color:var(--amber);background:rgba(58,34,26,0.6)}
+.guide-banner .gb-tag{
+  font-size:12px;font-weight:700;letter-spacing:0.12em;
+  color:#0D0B09;background:var(--amber);
+  padding:6px 14px;border-radius:2px;white-space:nowrap;
+  font-family:'Inter',sans-serif;
+}
+.guide-banner .gb-t{line-height:1.5;font-weight:600}
+@media(max-width:720px){
+  .guide-banner{width:100%;font-size:15px;padding:14px 18px;gap:10px}
+  .guide-banner .gb-tag{font-size:11px;padding:5px 11px}
+}
+
+/* ===== Guide product card (pricing) ===== */
+.price-card.guide-card{
+  background:#241813;
+  border:1px solid var(--amber);
+  border-top:3px solid var(--amber);
+}
+.price-card.guide-card .price-label{color:var(--amber)}
+.price-card.guide-card .price-amount{font-size:24px;line-height:1.3}
+.price-card.guide-card .btn-guide{
+  display:inline-block;margin-top:14px;
+  background:var(--amber);color:#0D0B09;
+  padding:8px 20px;border-radius:var(--radius);
+  font-size:12px;font-weight:700;text-decoration:none;
+  font-family:'Inter',sans-serif;
+  transition:background 0.2s;
+}
+.price-card.guide-card .btn-guide:hover{background:#EAB579}
+
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute">
+  <filter id="inkGrain" x="-20%" y="-20%" width="140%" height="140%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7" result="noise"/>
+    <feColorMatrix in="noise" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.55 0" result="alphaNoise"/>
+    <feComposite in="SourceGraphic" in2="alphaNoise" operator="out" result="grain"/>
+    <feMerge><feMergeNode in="SourceGraphic"/><feMergeNode in="grain"/></feMerge>
+  </filter>
+</svg>
+<!-- Header -->
+<div class="header">
+  <div class="brand">
+    <div class="hanko"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="#C8553A" filter="url(#inkGrain)"/><text x="20" y="27" text-anchor="middle" font-family="Zen Old Mincho, serif" font-size="20" fill="#F3EDE4">応</text></svg></div>
+    respond
+  </div>
+  <nav>
+    <a href="#philosophy" class="link">Philosophy</a>
+    <a href="#diff" class="link">Feature</a>
+    <a href="#generations" class="link">Generation</a>
+    <a href="#" class="link">Demo</a>
+    <a href="#pricing" class="link">Pricing</a>
+    <a href="#" class="link">FAQ</a>
+    <a href="#" class="cta">Contact</a>
+  </nav>
+</div>
+
+<!-- Hero -->
+<div class="hero hero-video">
+  <video class="hero-bgvid" autoplay muted loop playsinline poster="">
+    <source src="bg_videos/mixkit_489_preview.mp4" type="video/mp4">
+  </video>
+  <div class="hero-vid-overlay"></div>
+  <div class="h-wrap">
+    <div class="left">
+      <div class="tategaki">正確さより、違和感のなさ</div>
+      <div class="copy">
+        <div class="tag"><span class="dot"></span>AI CUSTOMER RESPONSE SYSTEM</div>
+        <h1>正確さより、<br>違和感のなさ。</h1>
+        <p class="desc">14世代の会話データから、<br>その世代らしい自然な応答を自動生成。<br>AIを感じさせない、心地よいコミュニケーションを。</p>
+        <div class="btns">
+          <a href="#diff" class="btn-primary">サービスについて <span style="font-weight:400">→</span></a>
+          <a href="#" class="btn-ghost">デモを体験する <span style="font-weight:400">→</span></a>
+        </div>
+        <a class="guide-banner" href="guide_landing.html">
+          <span class="gb-tag">新商品</span>
+          <span class="gb-t">AIシステム構築ガイド — 月4,000円でAIが働く会社を作る方法 →</span>
+        </a>
+      </div>
+    </div>
+        <div class="right">
+      <div class="chat-widget">
+        <div class="bar">
+          <span class="title">respond デモ体験</span>
+          <span class="status">自動応答中</span>
+          <button class="spk on" id="voiceToggle" type="button" aria-label="音声応答" aria-pressed="true" title="音声応答 ON/OFF">
+            <svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+          </button>
+        </div>
+        <div class="ch-body" id="heroChatBody">
+          <div class="m b">
+            <div class="a">応</div>
+            <div class="b">いらっしゃいませ。<br>ご用件をお聞かせください。<div class="t">自動</div></div>
+          </div>
+        </div>
+        <div class="typing" id="heroTyping">Rが入力中...</div>
+        <div class="ch-foot">
+          <button class="mic" id="micBtn" type="button" aria-label="音声で話す" title="音声で話す">
+            <svg viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="17" x2="12" y2="22"/></svg>
+          </button>
+          <input type="text" id="heroChatInput" placeholder="メッセージを書いてください..." onkeydown="if(event.key==='Enter')sendHeroChat()">
+          <button class="cs" onclick="sendHeroChat()" aria-label="送信">
+            <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 5 Differences -->
+<div class="section" id="diff">
+  <div class="sec-head">
+    <div class="tategaki">なぜ respond か</div>
+    <div class="tategaki horiz-fallback">なぜ respond か</div>
+    <div>
+      <h2>既存のチャットボットとの<br><span class="em">五つの決定的な違い</span></h2>
+      <p class="sub">「FAQ一致率」ではなく「お客様が違和感を覚えないか」を設計基準としています。</p>
+    </div>
+  </div>
+  <div class="diff-grid">
+    <div class="diff-item"><div class="roundel">一</div><h3>違和感の排除</h3><p>「正確さ」ではなく「話しかけられた側がどう感じるか」で設計。心理学・メディア研究論文ベース。</p></div>
+    <div class="diff-item"><div class="roundel">二</div><h3>十四世代対応</h3><p>20代前半〜80代後半まで、それぞれに最適化された話法。年齢層を推定し話し方を自動調整。</p></div>
+    <div class="diff-item"><div class="roundel">三</div><h3>100%敬語・標準語</h3><p>東京標準語・敬語固定。方言やタメ口なし。ボットのペルソナは変えず、語彙・丁寧さ・文体のみ変化。</p></div>
+    <div class="diff-item"><div class="roundel">四</div><h3>質問→即答</h3><p>カテゴリ選択不要。お客様は質問を打つだけで応答が返ってくる。導線のストレスゼロ。</p></div>
+    <div class="diff-item"><div class="roundel">五</div><h3>言語学×心理学ベース</h3><p>学術論文＋日本語自然会話コーパス（CEJC）から抽出した実データに基づく応答設計。</p></div>
+    <div class="diff-item"><div class="roundel">六</div><h3>オフライン店舗向け</h3><p>AIに詳しくない一般のお客様が、実店舗で違和感なく使えるデジタル従業員を目指す。</p></div>
+  </div>
+</div>
+
+<!-- 14 Generations — route line -->
+<div class="section" id="generations">
+  <div class="sec-head">
+    <div class="tategaki">世代という路線図</div>
+    <div class="tategaki horiz-fallback">世代という路線図</div>
+    <div>
+      <h2><span class="em">十四世代</span>それぞれに最適化された話法</h2>
+      <p class="sub">お客様の話し方・年齢層から世代を推定し、語彙・敬語レベル・文体で応答します。ボットは常に同じ丁寧さを維持。変化するのは言葉づかいのみです。</p>
+    </div>
+  </div>
+  <div class="line-scroll">
+    <div class="route" id="routeLine">
+      <!-- stops injected by script -->
+    </div>
+  </div>
+  <div class="route-hint">← 横にスクロールできます →</div>
+</div>
+<!-- Philosophy -->
+<div class="section" id="philosophy">
+  <div class="sec-head">
+    <div class="tategaki">核心の哲学</div>
+    <div class="tategaki horiz-fallback">核心の哲学</div>
+    <div>
+      <h2>respond を貫く<span class="em">三つの哲学</span></h2>
+    </div>
+  </div>
+  <div class="phil">
+    <div class="phil-item">
+      <div class="kanji">心</div>
+      <div class="gloss">kokoro — feeling</div>
+      <h3>「話しかけられた側がどう感じるか」で設計する</h3>
+      <p>既存のチャットボットは正確な回答を目標とします。respondはお客様がその話し方を聞いてどう感じるかを基準に設計。言語学（世代別話法）×心理学（受容心理）×メディア研究（違和感要因）の交差点から。</p>
+    </div>
+    <div class="phil-item">
+      <div class="kanji">体</div>
+      <div class="gloss">karada — form</div>
+      <h3>AIらしさを出さない</h3>
+      <p>パープルのグラデーション、グラスモーフィズム、ベントグリッドは一切排除。「AIがお答えします」のような文言も使いません。チャットボットであることを隠すのではなく、意識させないことを目指します。</p>
+    </div>
+    <div class="phil-item">
+      <div class="kanji">技</div>
+      <div class="gloss">waza — technique</div>
+      <h3>ボットのペルソナは固定。話し方はお客様基準で変化</h3>
+      <p>「あなたは○○歳の店員です」ではなく「あなたは○○歳のお客様と話しています」。ボットは常に同じ丁寧さを維持し、変化するのは語彙・敬語レベル・文体のみです。</p>
+    </div>
+  </div>
+</div>
+
+<!-- Market comparison -->
+<div class="section">
+  <div class="sec-head">
+    <div class="tategaki">市場における位置</div>
+    <div class="tategaki horiz-fallback">市場における位置</div>
+    <div>
+      <h2>まったく新しい<span class="em">Level 5</span>のカテゴリ</h2>
+      <p class="sub">国内AIチャットボット120サービス以上を分析。既存サービスにない価値を提供します。</p>
+    </div>
+  </div>
+  <table class="comp-table">
+    <tr><th>比較軸</th><th>既存サービス</th><th>respond</th></tr>
+    <tr><td>核心価値</td><td>正確度・効率性・コスト削減</td><td>違和感の排除・自然さ</td></tr>
+    <tr><td>応答設計</td><td>FAQベース（文書検索）</td><td>世代別トーン＋心理学ベース</td></tr>
+    <tr><td>ユーザー導線</td><td>質問→カテゴリ選択→回答</td><td>質問→即答</td></tr>
+    <tr><td>対象顧客</td><td>AI／IT担当者</td><td>AIを知らないオフライン一般客</td></tr>
+    <tr><td>データ基盤</td><td>FAQログ</td><td>論文＋世代別話し言葉コーパス</td></tr>
+  </table>
+</div>
+
+<!-- Pricing -->
+<div class="section" id="pricing">
+  <div class="sec-head">
+    <div class="tategaki">料金体系</div>
+    <div class="tategaki horiz-fallback">料金体系</div>
+    <div>
+      <h2>シンプルな<span class="em">料金体系</span></h2>
+      <p class="sub">初期費用と月額利用料のみ。クオリティ不足は値引きではなく、さらに高いプレミアムで。</p>
+    </div>
+  </div>
+  <div class="price-wrap">
+    <div class="price-card">
+      <div class="price-label">初期制作</div>
+      <div class="price-amount">150,000<small>円</small></div>
+      <p>税別。初回のみ。十四世代対応のAI応対システムを構築・設定。</p>
+    </div>
+    <div class="price-card featured">
+      <div class="price-label">月額利用料</div>
+      <div class="price-amount">50,000<small>円</small></div>
+      <p>税別。サーバー運用・API利用・アップデート込。月単位で解約可能。</p>
+    </div>
+    <div class="price-card">
+      <div class="price-label">プレミアム</div>
+      <div class="price-amount">500,000<small>円〜</small></div>
+      <p>税別。業種別カスタマイズ・分析ダッシュボード・優先サポート含む。</p>
+    </div>
+    <div class="price-card guide-card">
+      <div class="price-label">新商品 ・ AIシステム構築ガイド</div>
+      <div class="price-amount">4,000<small>円/月〜</small></div>
+      <p>実行・監査・修正・秘書 — 4つの役割を持つAI組織の作り方。企業が数千万円かける仕組みを最短1日で。</p>
+      <a class="btn-guide" href="guide_landing.html">詳しく見る →</a>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-wrap">
+  <div class="cta-box">
+    <div class="hanko"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="#F3EDE4" filter="url(#inkGrain)"/><text x="20" y="27" text-anchor="middle" font-family="Zen Old Mincho, serif" font-size="20" fill="#C8553A">応</text></svg></div>
+    <h2>お問い合わせはこちら</h2>
+    <p>デモのご依頼、導入のご相談、その他お問い合わせはお気軽にどうぞ。</p>
+    <a href="#" class="btn">無料相談を予約する</a>
+    <div class="small">オンライン面談可 ・ 30分で概要説明</div>
+  </div>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  <div class="l">
+    <svg class="foot-hanko" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="#6B6459"/><text x="20" y="27" text-anchor="middle" font-family="Zen Old Mincho, serif" font-size="20" fill="#0D0B09">応</text></svg>
+    <a href="#diff">違い</a>
+    <a href="#generations">十四世代</a>
+    <a href="#philosophy">哲学</a>
+    <a href="#pricing">料金</a>
+    <a href="#">お問い合わせ</a>
+  </div>
+  <div class="copyright">© 2026 respond</div>
+</div>
+<script>
+/* ---- generation route-line data ---- */
+var GENS = [
+  {age:'20代前半',desc:'です・ます調、カタカナ語OK、明るく元気'},
+  {age:'20代後半',desc:'ビジネス敬語、カタカナ語自然に、テキパキ'},
+  {age:'30代前半',desc:'敬語に最も敏感、させていただきます多用'},
+  {age:'30代後半',desc:'尊敬語・謙譲語正確、落ち着き'},
+  {age:'40代前半',desc:'でございます、カタカナ語最小限'},
+  {age:'40代後半',desc:'格式高め、に関しまして・の件ですが'},
+  {age:'50代前半',desc:'品格ある敬語、古風な丁寧表現'},
+  {age:'50代後半',desc:'誠に恐れ入りますが、謙虚で控えめ'},
+  {age:'60代前半',desc:'女性=ですわ／男性=温かみある丁寧語'},
+  {age:'60代後半',desc:'女性=わ・わね／男性=穏やかな語り口'},
+  {age:'70代前半',desc:'女性=ますの／男性=落ち着いた言い回し'},
+  {age:'70代後半',desc:'昔の言い回し、カタカナ語NG'},
+  {age:'80代前半',desc:'戦前教育の影響、漢語調'},
+  {age:'80代後半',desc:'明治〜大正語ベース、文語調'}
+];
+(function(){
+  var route = document.getElementById('routeLine');
+  var html = '';
+  GENS.forEach(function(g, i){
+    var pos = i % 2 === 0 ? 'above' : 'below';
+    html += '<div class="stop '+pos+'"><div class="card"><div class="age">'+g.age+'</div><div class="desc">'+g.desc+'</div></div><div class="node"></div></div>';
+  });
+  route.innerHTML = html;
+})();
+
+/* ---- chat widget ---- */
+var SESSION_ID = localStorage.getItem('respond_sid');
+if (!SESSION_ID) {
+  SESSION_ID = 'web_' + Date.now() + '_' + Math.random().toString(36).slice(2, 9);
+  localStorage.setItem('respond_sid', SESSION_ID);
+}
+function sendHeroChat(){
+  var input=document.getElementById('heroChatInput');
+  var body=document.getElementById('heroChatBody');
+  var typing=document.getElementById('heroTyping');
+  var text=input.value.trim();
+  if(!text)return;
+  body.innerHTML+='<div class="m u"><div class="a">私</div><div class="b">'+text.replace(/</g,'&lt;')+'<div class="t">今</div></div></div>';
+  input.value='';
+  body.scrollTop=body.scrollHeight;
+  typing.classList.add('show');
+  var xhr=new XMLHttpRequest();
+  xhr.open('POST','/api/chat',true);
+  xhr.setRequestHeader('Content-Type','application/json');
+  xhr.onload=function(){
+    typing.classList.remove('show');
+    try{
+      var r=JSON.parse(xhr.responseText);
+      body.innerHTML+='<div class="m b"><div class="a">応</div><div class="b"><div class="l">自動応対</div>'+r.reply.replace(/</g,'&lt;')+'<div class="t">'+r.time+' ・ 自動</div></div></div>';
+      speakReply(r.reply);
+    }catch(e){
+      body.innerHTML+='<div class="m b"><div class="a">応</div><div class="b"><div class="l">自動応対</div>申し訳ございません。応答に失敗しました。<div class="t">今 ・ エラー</div></div></div>';
+    }
+    body.scrollTop=body.scrollHeight;
+  };
+  xhr.onerror=function(){
+    typing.classList.remove('show');
+    body.innerHTML+='<div class="m b"><div class="a">応</div><div class="b"><div class="l">自動応対</div>接続エラーが発生しました。もう一度お試しください。<div class="t">今 ・ エラー</div></div></div>';
+    body.scrollTop=body.scrollHeight;
+  };
+  xhr.send(JSON.stringify({message:text, session_id:SESSION_ID}));
+}
+/* ---- voice: speech input (STT) & output (TTS) ---- */
+var VOICE_ON = localStorage.getItem('respond_voice') !== 'off';
+var micSupported = !!(window.SpeechRecognition || window.webkitSpeechRecognition);
+
+/* 모바일 자동재생 정책 대응: 첫 사용자 조작 시 오디오 해금 */
+var _audioCtx = null;
+function unlockAudio(){
+  try{
+    if(!_audioCtx){ _audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }
+    if(_audioCtx && _audioCtx.state==='suspended'){ _audioCtx.resume(); }
+  }catch(e){}
+  try{
+    if('speechSynthesis' in window){
+      speechSynthesis.resume();
+      speechSynthesis.getVoices();
+    }
+  }catch(e){}
+}
+['touchstart','touchend','mousedown','click','keydown'].forEach(function(ev){
+  document.addEventListener(ev, unlockAudio, {passive:true, capture:true});
+});
+
+function pickJaVoice(){
+  if(!('speechSynthesis' in window)) return null;
+  var voices = speechSynthesis.getVoices();
+  var prefs = ['Microsoft Haruka','Haruka','Google 日本語','Kyoko','O-Ren','Yuna','Samantha'];
+  for(var j=0;j<prefs.length;j++){
+    for(var i=0;i<voices.length;i++){
+      var v=voices[i];
+      if(v.lang && v.lang.toLowerCase().indexOf('ja')===0 && v.name.indexOf(prefs[j])>=0) return v;
+    }
+  }
+  for(var k=0;k<voices.length;k++){
+    var w=voices[k];
+    if(w.lang && w.lang.toLowerCase().indexOf('ja')===0) return w;
+  }
+  return null;
+}
+
+function speakReply(text){
+  if(!VOICE_ON || !('speechSynthesis' in window)) return;
+  unlockAudio();
+  var clean=(text||'').replace(/<[^>]*>/g,'').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&').replace(/&quot;/g,'"').replace(/&#39;/g,"'");
+  if(!clean.trim()) return;
+  speechSynthesis.cancel();
+  var u=new SpeechSynthesisUtterance(clean);
+  u.lang='ja-JP';
+  var v=pickJaVoice();
+  if(v) u.voice=v;
+  u.rate=1.0; u.pitch=1.0; u.volume=1.0;
+  u.onerror=function(){}; u.onend=function(){};
+  speechSynthesis.speak(u);
+}
+
+function startMic(){
+  var micBtn=document.getElementById('micBtn');
+  var input=document.getElementById('heroChatInput');
+  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR) return;
+  unlockAudio();
+  var rec=new SR();
+  rec.lang='ja-JP';
+  rec.interimResults=false;
+  rec.maxAlternatives=1;
+  micBtn.classList.add('listening');
+  rec.onresult=function(e){
+    var t=e.results[0][0].transcript||'';
+    if(t){ input.value=t; sendHeroChat(); }
+  };
+  rec.onerror=function(){ micBtn.classList.remove('listening'); };
+  rec.onend=function(){ micBtn.classList.remove('listening'); };
+  try{ rec.start(); }catch(err){ micBtn.classList.remove('listening'); }
+}
+
+function toggleVoice(){
+  VOICE_ON=!VOICE_ON;
+  localStorage.setItem('respond_voice', VOICE_ON?'on':'off');
+  if(VOICE_ON) unlockAudio();
+  var btn=document.getElementById('voiceToggle');
+  if(btn){
+    btn.classList.toggle('on',VOICE_ON);
+    btn.classList.toggle('off',!VOICE_ON);
+    btn.setAttribute('aria-pressed',VOICE_ON?'true':'false');
+  }
+  if(!VOICE_ON && 'speechSynthesis' in window) speechSynthesis.cancel();
+}
+document.addEventListener('DOMContentLoaded',function(){
+  document.getElementById('heroChatInput').focus();
+  unlockAudio();
+  var micBtn=document.getElementById('micBtn');
+  if(micBtn){
+    if(micSupported){ micBtn.style.display='flex'; micBtn.addEventListener('click',startMic); }
+    else micBtn.style.display='none';
+  }
+  var vt=document.getElementById('voiceToggle');
+  if(vt){
+    vt.classList.toggle('on',VOICE_ON);
+    vt.classList.toggle('off',!VOICE_ON);
+    vt.setAttribute('aria-pressed',VOICE_ON?'true':'false');
+    vt.addEventListener('click',toggleVoice);
+  }
+  if('speechSynthesis' in window){
+    speechSynthesis.getVoices();
+    speechSynthesis.onvoiceschanged=function(){};
+  }
+});
+</script>
+</body>
+</html>
